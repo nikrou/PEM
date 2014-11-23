@@ -18,8 +18,7 @@
 // | USA.                                                                  |
 // +-----------------------------------------------------------------------+
 
-
-include($root_path.'include/Smarty/libs/Smarty.class.php');
+require($root_path.'vendor/autoload.php');
 
 class Template {
 
