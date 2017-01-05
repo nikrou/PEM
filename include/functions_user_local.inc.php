@@ -24,7 +24,7 @@
 function check_user_password($username, $password)
 {
   global $conf, $db;
-    
+
   // retrieving the encrypted password of the login submitted
   $query = '
 SELECT '.$conf['user_fields']['id'].' AS id,
@@ -39,7 +39,7 @@ SELECT '.$conf['user_fields']['id'].' AS id,
   // because it will have been automatically escaped in
   // include/common.inc.php
   $password = stripslashes($password);
-  
+
   if ($row['password'] == $conf['pass_convert']($password))
   {
     return $row['id'];;
@@ -88,7 +88,7 @@ function register_user($username, $password, $email)
     // because it will have been automatically escaped in
     // include/common.inc.php
     $password = stripslashes($password);
-    
+
     $insert =
       array(
         $conf['user_fields']['username'] => $username,
@@ -174,7 +174,7 @@ function get_user_basic_infos_of($author_ids)
   }
 
   $user_basic_infos_of = array();
-  
+
   $query = '
 SELECT '.$conf['user_fields']['id'].' AS id,
        '.$conf['user_fields']['username'].' AS username,
@@ -184,12 +184,10 @@ SELECT '.$conf['user_fields']['id'].' AS id,
   WHERE '.$conf['user_fields']['id'].' IN ('.implode(',', $author_ids).')
 ;';
   $result = $db->query($query);
-  while ($row = $db->fetch_array($result))
+  while ($row = $db->fetch_assoc($result))
   {
     $user_basic_infos_of[ $row['id'] ] = $row;
   }
 
   return $user_basic_infos_of;
 }
-
-?>

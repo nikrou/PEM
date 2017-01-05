@@ -67,7 +67,7 @@ $output_versions = array();
 
 foreach ($versions as $version) {
   $id_version = $version['id_version'];
-  
+
   array_push(
     $output_versions,
     array(
@@ -93,4 +93,3 @@ switch ($format) {
   default :
     echo json_encode($output_versions);
 }
-?>

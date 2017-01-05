@@ -62,14 +62,14 @@ SELECT * FROM (
       idx_extension
     FROM '.REV_TABLE.'
     WHERE idx_extension IN ('.implode(',',$extension_ids).')
-    ORDER BY date DESC 
+    ORDER BY date DESC
   ) AS t
   GROUP BY t.idx_extension
 ;';
   $result = $db->query($query);
 
   $revision_of = $revision_ids_of = array();
-  while ($row = $db->fetch_array($result))
+  while ($row = $db->fetch_assoc($result))
   {
     $revision_of[ $row['idx_extension'] ] = $row['version'];
     $revision_ids_of[ $row['idx_extension'] ] = $row['id_revision'];
@@ -80,7 +80,7 @@ SELECT * FROM (
   $versions_of_revision = get_versions_of_revision(array_values($revision_ids_of));
 
   $query = '
-SELECT 
+SELECT
     COUNT(rate) AS total,
     idx_extension
   FROM '.RATE_TABLE.'
@@ -101,7 +101,7 @@ SELECT
       'revision' => @$revision_of[$extension_id],
       'last_version' => @$versions_of_revision[ $revision_ids_of[$extension_id] ][0],
       );
-      
+
       if (in_array($extension_id, $my_extension_ids))
       {
         $tpl->append('extensions', $extension);

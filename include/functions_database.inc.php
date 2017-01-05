@@ -29,7 +29,7 @@
 function mass_inserts($table_name, $dbfields, $datas)
 {
   global $db;
-  
+
   $query = '
 INSERT INTO '.$table_name.'
   ('.implode(',', $dbfields).')
@@ -63,7 +63,7 @@ INSERT INTO '.$table_name.'
   }
   $query.= '
 ;';
-  
+
   $db->query($query);
 }
 
@@ -78,15 +78,9 @@ INSERT INTO '.$table_name.'
 function mass_updates($tablename, $dbfields, $datas)
 {
   global $db;
-  
-  // depending on the MySQL version, we use the multi table update or N
+
   // update queries
-  $query = 'SELECT VERSION() AS version;';
-  list($mysql_version) = mysql_fetch_array($db->query($query));
-  if (count($datas) < 10 or version_compare($mysql_version, '4.0.4') < 0)
-  {
-    // MySQL is prior to version 4.0.4, multi table update feature is not
-    // available
+  if (count($datas) < 10) {
     foreach ($datas as $data)
     {
       $query = '
@@ -134,7 +128,7 @@ SHOW FULL COLUMNS FROM '.$tablename.'
     $result = $db->query($query);
     $columns = array();
     $all_fields = array_merge($dbfields['primary'], $dbfields['update']);
-    while ($row = mysql_fetch_array($result))
+    while ($row = $db->fetch_assoc($result))
     {
       if (in_array($row['Field'], $all_fields))
       {
@@ -231,5 +225,3 @@ function query2array($query, $key_name=null, $value_name=null)
 
   return $data;
 }
-
-?>

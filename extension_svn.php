@@ -67,7 +67,7 @@ if ($db->num_rows($result) == 0)
 {
   message_die('Incorrect extension identifier');
 }
-list($page['extension_name'], $svn_url, $git_url, $root_dir, $archive_name) = $db->fetch_array($result);
+list($page['extension_name'], $svn_url, $git_url, $root_dir, $archive_name) = $db->fetch_assoc($result);
 
 // +-----------------------------------------------------------------------+
 // |                           Form submission                             |
@@ -79,9 +79,9 @@ if (isset($_POST['submit']))
   {
     die("unexpected repository type, either svn or git");
   }
-  
+
   $url = $db->escape($_POST['url']);
-  
+
   if (empty($svn_url) and empty($git_url))
   {
     $root_dir = ltrim(strrchr(rtrim($url, '/\\'), '/'), '/\\');
@@ -223,4 +223,3 @@ include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
 $tpl->parse('page');
 $tpl->p();
-?>

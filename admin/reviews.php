@@ -50,7 +50,7 @@ $tpl_reviews = query2array($query);
 
 if (count($tpl_reviews))
 {
-  $extensions_ids = array_map(create_function('$v', 'return $v["idx_extension"];'), $tpl_reviews); 
+  $extensions_ids = array_map(create_function('$v', 'return $v["idx_extension"];'), $tpl_reviews);
   $extensions_infos_of = get_extension_infos_of($extensions_ids);
 
   foreach ($tpl_reviews as &$review)
@@ -75,4 +75,3 @@ $tpl->assign('f_action', 'reviews.php');
 $tpl->assign_var_from_handle('main_content', 'reviews');
 $tpl->parse('page');
 $tpl->p();
-?>

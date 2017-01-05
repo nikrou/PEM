@@ -67,11 +67,11 @@ function load_language($filename, $no_fallback = false, $dirname = './')
 function get_current_language()
 {
   global $db, $conf;
-  
+
   $language = null;
-  
+
   $interface_languages = get_interface_languages();
-  
+
   if (isset($_GET['lang']))
   {
     $language = @$interface_languages[$_GET['lang']];
@@ -80,11 +80,11 @@ function get_current_language()
   {
     $language = $_SESSION['language'];
   }
-  
+
   if (empty($language) or !is_array($language))
   {
     $language = $interface_languages[$conf['default_language']];
-    
+
     if ($conf['get_browser_language'])
     {
       $browser_language = @substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2);
@@ -108,7 +108,7 @@ function get_current_language()
 function get_current_language_id()
 {
   $language = null;
-  
+
   if (isset($_SESSION['language']))
   {
     $language = $_SESSION['language'];
@@ -117,7 +117,7 @@ function get_current_language_id()
   {
     $language = get_current_language();
   }
-  
+
   return $language['id'];
 }
 
@@ -132,7 +132,7 @@ function get_interface_languages()
   {
     return $cache['interface_languages'];
   }
-  
+
   $query = '
 SELECT id_language AS id,
        code,
@@ -143,7 +143,7 @@ SELECT id_language AS id,
 ;';
   $result = $db->query($query);
   $interface_languages = array();
-  while ($row = mysql_fetch_assoc($result))
+  while ($row = $db->fetch_assoc($result))
   {
     $interface_languages[$row['code']] = $row;
   }
@@ -152,5 +152,3 @@ SELECT id_language AS id,
 
   return $cache['interface_languages'];
 }
-
-?>

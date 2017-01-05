@@ -29,4 +29,3 @@ if (!isAdmin(@$user['id']))
   header('Location: '.$root_path);
   exit;
 }
-?>

@@ -44,7 +44,7 @@ if (isset($_POST['category']) and $_POST['category']!=-1)
     INNER JOIN '.EXT_CAT_TABLE.' AS cat
       ON cat.idx_extension = ext.id_extension
       AND cat.idx_category = '.$_POST['category'];
-    
+
   $tpl->assign('filter_category', $_POST['category']);
 }
 if (isset($_POST['version']) and $_POST['version']!=-1)
@@ -55,13 +55,13 @@ if (isset($_POST['version']) and $_POST['version']!=-1)
     INNER JOIN '.COMP_TABLE.' AS comp
       ON comp.idx_revision = rev.id_revision
       AND comp.idx_version = '.$_POST['version'];
-    
+
   $tpl->assign('filter_version', $_POST['version']);
 }
 if (!empty($_POST['name']))
 {
   $where[] = 'LOWER(ext.name) LIKE "%'.strtolower($_POST['name']).'%"';
-  
+
   $tpl->assign('filter_name', stripslashes($_POST['name']));
 }
 
@@ -100,9 +100,9 @@ while ($row = $db->fetch_assoc($result))
       'all' => array($row['main_language']),
       );
   }
-  
-  if ( !empty($row['other_language']) and 
-    !in_array($row['other_language'], $extension_languages[ $row['id_extension'] ]['all']) 
+
+  if ( !empty($row['other_language']) and
+    !in_array($row['other_language'], $extension_languages[ $row['id_extension'] ]['all'])
   )
   {
     $extension_languages[ $row['id_extension'] ]['all'][] = $row['other_language'];
@@ -114,7 +114,7 @@ $tpl->assign('extensions', $extension_languages);
 
 // categories
 $query = '
-SELECT id_category, name   
+SELECT id_category, name
   FROM '.CAT_TABLE.' AS c
   ORDER BY name ASC
 ;';
@@ -134,4 +134,3 @@ $tpl->assign('versions', query2array($query, 'id_version', 'version'));
 
 $tpl->assign_var_from_handle('main_content', 'extensions_translations');
 $tpl->pparse('page');
-?>

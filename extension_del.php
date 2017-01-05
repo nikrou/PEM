@@ -21,7 +21,7 @@
 define('INTERNAL', true);
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
-  
+
 if (!isset($user['id']))
 {
   message_die('You must be connected to add, modify or delete an extension.');
@@ -106,4 +106,3 @@ DELETE
 $db->query($query);
 
 message_success('Extension successfuly deleted.', 'index.php');
-?>

@@ -24,24 +24,20 @@
 
 
 // Make sure no one attempts to run this script "directly"
-if (!defined('INTERNAL'))
-{
-  exit;
+if (!defined('INTERNAL')) {
+    exit;
 }
 
 
 //
 // Return current timestamp (with microseconds) as a float (used in dblayer)
 //
-if (defined('PUN_SHOW_QUERIES'))
-{
-	function get_microtime()
-	{
+if (defined('PUN_SHOW_QUERIES')) {
+	function get_microtime() {
 		list($usec, $sec) = explode(' ', microtime());
 		return ((float)$usec + (float)$sec);
 	}
 }
-
 
 // Load the appropriate DB layer class
 switch ($conf['db_params']['type'])
@@ -70,10 +66,10 @@ switch ($conf['db_params']['type'])
 
 // Create the database adapter object (and open/connect to/select db)
 $db = new DBLayer(
-  $conf['db_params']['host'],
-  $conf['db_params']['user'],
-  $conf['db_params']['pass'],
-  $conf['db_params']['name'],
-  $conf['db_params']['tables_prefix'],
-  $conf['db_params']['persistent_connection']
-  );
+    $conf['db_params']['host'],
+    $conf['db_params']['user'],
+    $conf['db_params']['pass'],
+    $conf['db_params']['name'],
+    $conf['db_params']['tables_prefix'],
+    $conf['db_params']['persistent_connection']
+);

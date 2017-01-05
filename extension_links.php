@@ -111,7 +111,7 @@ if ($db->num_rows($result) == 0)
 {
   message_die('Incorrect extension identifier');
 }
-list($page['extension_name']) = $db->fetch_array($result);
+list($page['extension_name']) = $db->fetch_assoc($result);
 
 // +-----------------------------------------------------------------------+
 // |                           Form submission                             |
@@ -137,7 +137,7 @@ SELECT MAX(rank) AS current_rank
   FROM '.LINKS_TABLE.'
   WHERE idx_extension = '.$page['extension_id'].'
 ;';
-    list($current_rank) = $db->fetch_array($db->query($query));
+    list($current_rank) = $db->fetch_assoc($db->query($query));
 
     if (empty($current_rank))
     {
@@ -201,7 +201,7 @@ $tpl->assign(
   );
 
 $tpl_links =array();
-  
+
 $query = '
 SELECT
     id_link,
@@ -214,7 +214,7 @@ SELECT
   ORDER BY rank ASC
 ;';
 $result = $db->query($query);
-while ($row = $db->fetch_array($result))
+while ($row = $db->fetch_assoc($result))
 {
   $description = '';
 
@@ -256,4 +256,3 @@ include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
 $tpl->parse('page');
 $tpl->p();
-?>

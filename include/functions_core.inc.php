@@ -36,7 +36,7 @@ SELECT id_version,
 ;';
   $result = $db->query($query);
 
-  while ($row = $db->fetch_array($result))
+  while ($row = $db->fetch_assoc($result))
   {
     $version_name_of[ $row['id_version'] ] = $row['version'];
   }
@@ -53,28 +53,28 @@ function get_version_ids_of_revision($revision_ids)
   {
     return array();
   }
-  
+
   global $db;
 
     // Get list of compatibilities
   $version_ids_of = array();
-  
+
   $query = '
 SELECT idx_version,
        idx_revision
   FROM '.COMP_TABLE.'
   WHERE idx_revision IN ('.implode(',', $revision_ids).')
 ;';
-  
+
   $result = $db->query($query);
-  
-  while ($row = $db->fetch_array($result))
+
+  while ($row = $db->fetch_assoc($result))
   {
     if (!isset($version_ids_of[ $row['idx_revision'] ]))
     {
       $version_ids_of[ $row['idx_revision'] ] = array();
     }
-    
+
     array_push(
       $version_ids_of[ $row['idx_revision'] ],
       $row['idx_version']
@@ -122,7 +122,7 @@ function get_versions_of_revision($revision_ids)
 function get_version_ids_of_extension($extension_ids)
 {
   global $db;
-  
+
   // first we find the revisions associated to each extension
   $query = '
 SELECT id_revision,
@@ -135,7 +135,7 @@ SELECT id_revision,
   $revisions_of = array();
 
   $result = $db->query($query);
-  while ($row = $db->fetch_array($result))
+  while ($row = $db->fetch_assoc($result))
   {
     // add the revision id to the list of all revisions
     array_push($revision_ids, $row['id_revision']);
@@ -212,7 +212,7 @@ function get_revision_infos_of($revision_ids)
   global $db;
 
   $revision_infos_of = array();
-  
+
   // retrieve revisions information
   $query = '
 SELECT
@@ -263,19 +263,19 @@ function get_extension_infos_of($extension_ids)
   {
     $ids_string = $extension_ids;
   }
-  
+
   $query = '
-SELECT 
+SELECT
     COUNT(1) AS count,
     idx_extension
   FROM '.REVIEW_TABLE.'
-  WHERE 
+  WHERE
     idx_extension IN ('.$ids_string.')
     '.(!isAdmin(@$user['id']) ? 'AND validated = "true"' : null).'
   GROUP BY idx_extension
 ;';
   $nb_reviews = query2array($query, 'idx_extension', 'count');
-  
+
   $query = '
 SELECT id_extension,
        name,
@@ -308,7 +308,7 @@ SELECT id_extension,
       return $row;
     }
   }
-  
+
   return $extension_infos_of;
 }
 
@@ -416,7 +416,7 @@ function get_extension_screenshot_infos($extension_id)
 {
   $thumbnail_src  = get_extension_thumbnail_src($extension_id);
   $screenshot_src = get_extension_screenshot_src($extension_id);
-  
+
   if (is_file($thumbnail_src) and is_file($screenshot_src))
   {
     return array(
@@ -440,7 +440,7 @@ function get_extension_screenshot_infos($extension_id)
 function log_download($revision_id)
 {
   global $db;
-  
+
   $revision_infos_of = get_revision_infos_of(array($revision_id));
 
   if (count($revision_infos_of) == 0) {
@@ -450,7 +450,7 @@ function log_download($revision_id)
   $query = '
 SELECT CURDATE()
 ;';
-  list($curdate) = mysql_fetch_row($db->query($query));
+  list($curdate) = $db->fetch_row($db->query($query));
   list($curyear, $curmonth, $curday) = explode('-', $curdate);
 
   $query = '
@@ -519,7 +519,7 @@ SELECT
  */
 function get_download_of_revision($revision_ids) {
   global $db;
-  
+
   if (count($revision_ids) == 0) {
     return array();
   }
@@ -538,7 +538,7 @@ SELECT
   WHERE id_revision IN ('.implode(',', $revision_ids).')
 ;';
   $result = $db->query($query);
-  
+
   while ($row = $db->fetch_assoc($result)) {
     $downloads_of_revision[ $row['id_revision'] ] = $row['nb_downloads'];
   }
@@ -570,7 +570,7 @@ SELECT idx_extension
 ;';
       $eids_for_category[$cid] = query2array($query, null, 'idx_extension');
     }
-  
+
     // then we calculate the intersection, the images that are associated to
     // every tags
     $eids = array_shift($eids_for_category);
@@ -615,7 +615,7 @@ SELECT idx_extension
 ;';
       $eids_for_tag[$tid] = query2array($query, null, 'idx_extension');
     }
-  
+
     // then we calculate the intersection, the images that are associated to
     // every tags
     $eids = array_shift($eids_for_tag);
@@ -641,7 +641,7 @@ SELECT
  */
 function get_categories_of_extension($extension_ids) {
   global $db;
-  
+
   $cat_list_for = array();
 
   $query = '
@@ -667,7 +667,7 @@ SELECT
     {
       $row['name'] = $row['default_name'];
     }
-    
+
     if (!isset($cat_list_for[$id_extension])) {
       $cat_list_for[$id_extension] = array();
     }
@@ -698,9 +698,9 @@ SELECT
  */
 function get_tags_of_extension($extension_ids) {
   global $db;
-  
+
   $cat_list_for = array();
-  
+
   $query = '
 SELECT idx_extension,
        id_tag,
@@ -711,10 +711,10 @@ SELECT idx_extension,
   WHERE et.idx_extension IN ('.implode(',', $extension_ids).')
 ;';
   $result = $db->query($query);
-  
+
   while ($row = $db->fetch_assoc($result)) {
     $id_extension = $row['idx_extension'];
-    
+
     if (!isset($cat_list_for[$id_extension])) {
       $cat_list_for[$id_extension] = array();
     }
@@ -804,9 +804,9 @@ function get_language_ids_of_revision($revision_ids)
   {
     return array();
   }
-  
+
   $languages_of = array();
-  
+
   $query = '
 SELECT rv.idx_revision,
        l.id_language
@@ -816,9 +816,9 @@ SELECT rv.idx_revision,
   WHERE idx_revision IN ('.implode(',', $revision_ids).')
   ORDER BY l.name
 ;';
-  
+
   $result = $db->query($query);
-  
+
   while ($row = $db->fetch_assoc($result))
   {
     $languages_of[ $row['idx_revision'] ][] = $row['id_language'];
@@ -870,7 +870,7 @@ function get_languages_of_revision($revision_ids)
 function get_diff_languages_of_extension($extension_id)
 {
   global $db;
-  
+
   $query = '
 SELECT id_revision, id_language, code, name
   FROM '.REV_TABLE.' r
@@ -880,10 +880,10 @@ SELECT id_revision, id_language, code, name
   ORDER BY r.date ASC
 ;';
   $result = $db->query($query);
-  
+
   $existing_lang = array();
   $languages_of = array();
-  
+
   while ($row = $db->fetch_assoc($result))
   {
     if (!in_array($row['id_language'], $existing_lang))
@@ -892,18 +892,18 @@ SELECT id_revision, id_language, code, name
       $languages_of[ $row['id_revision'] ][] = $row;
     }
   }
-  
+
   return $languages_of;
 }
 
 /**
  * find extensions matching the search string
  *
- * search is performed on 
- *   extension name (10 points), 
+ * search is performed on
+ *   extension name (10 points),
  *   tags (8 pts),
- *   author name (8pts), 
- *   description (6 pts), 
+ *   author name (8pts),
+ *   description (6 pts),
  *   revision note (4 pts)
  * one point is removed every month of antiquity
  */
@@ -931,7 +931,7 @@ function get_extension_ids_for_search($search) {
       )
     );
   $add_bracked = create_function('&$s','$s="(".$s.")";');
-  
+
   // search on extension name
   $word_clauses = array();
   foreach ($words as $word) {
@@ -955,7 +955,7 @@ SELECT
       $search_result[$ext_id] = 10;
     }
   }
-  
+
   // search on tags
   $word_clauses = array();
   foreach ($words as $word) {
@@ -981,7 +981,7 @@ SELECT
       $search_result[$ext_id] = 8;
     }
   }
-  
+
   // search on author names
   $word_clauses = array();
   foreach ($words as $word) {
@@ -994,14 +994,14 @@ SELECT
     );
   // query with 2 JOIN to users table to find both extension owner AND authors
   $query = '
-SELECT 
+SELECT
     DISTINCT(id_extension)
   FROM '.EXT_TABLE.' AS e
     LEFT JOIN '.USERS_TABLE.' AS u1
       ON u1.'.$conf['user_fields']['id'].' = e.idx_user
-    LEFT JOIN '.AUTHORS_TABLE.' AS a 
-      ON a.idx_extension = e.id_extension 
-      LEFT JOIN '.USERS_TABLE.' AS u2 
+    LEFT JOIN '.AUTHORS_TABLE.' AS a
+      ON a.idx_extension = e.id_extension
+      LEFT JOIN '.USERS_TABLE.' AS u2
         ON u2.'.$conf['user_fields']['id'].' = a.idx_user
   WHERE '.implode("\n    OR ", $word_clauses).'
 ;';
@@ -1013,7 +1013,7 @@ SELECT
       $search_result[$ext_id] = 8;
     }
   }
-  
+
   // search on extension description
   $word_clauses = array();
   foreach ($words as $word) {
@@ -1047,7 +1047,7 @@ SELECT
       $search_result[$ext_id] = 6;
     }
   }
-  
+
   // search on revision description
   $word_clauses = array();
   foreach ($words as $word) {
@@ -1081,7 +1081,7 @@ SELECT
       $search_result[$ext_id] = 4;
     }
   }
-  
+
   // minor rank by the date of last revision (remove 1 point for every month)
   if (count($search_result)) {
     $time = time();
@@ -1094,14 +1094,14 @@ SELECT
   GROUP BY idx_extension
 ;';
     $result = $db->query($query);
-    while ($row = $db->fetch_array($result))
+    while ($row = $db->fetch_assoc($result))
     {
       $search_result[ $row['idx_extension'] ]-= ($time - $row['date']) / (60*60*24*7*30);
     }
-    
+
     arsort($search_result);
   }
-  
+
   return array_keys($search_result);
 }
 
@@ -1125,7 +1125,7 @@ function get_filtered_extension_ids($filter) {
       $filter['category_mode']
       );
   }
-  
+
   if (isset($filter['tag_ids'])) {
     $filtered_sets['tag_ids'] = get_extension_ids_for_tags(
       $filter['tag_ids'],
@@ -1144,7 +1144,7 @@ function get_filtered_extension_ids($filter) {
       $set
       );
   }
-  
+
   return array_unique($filtered_extension_ids);
 }
 
@@ -1191,7 +1191,7 @@ SELECT idx_extension
         $query = '
 DELETE
   FROM '.RATE_TABLE.'
-  WHERE 
+  WHERE
     idx_user = '.$user_id.'
     AND anonymous_id = "'.$save_anonymous_id.'"
     AND idx_extension IN ('.implode(',', $already_there).')
@@ -1202,7 +1202,7 @@ DELETE
        $query = '
 UPDATE '.RATE_TABLE.'
   SET anonymous_id = "'.$anonymous_id.'"
-  WHERE 
+  WHERE
     idx_user = '.$user_id.'
     AND anonymous_id = "'.$save_anonymous_id.'"
 ;';
@@ -1216,7 +1216,7 @@ UPDATE '.RATE_TABLE.'
   $query = '
 DELETE
   FROM '.RATE_TABLE.'
-  WHERE 
+  WHERE
     idx_extension = '.$extension_id.'
     AND idx_user = '.$user_id.'
 ';
@@ -1228,7 +1228,7 @@ DELETE
   $query.= '
 ;';
   $db->query($query);
-  
+
   if ($rate != '')
   {
     $query = '
@@ -1250,7 +1250,7 @@ INSERT
 ;';
     $db->query($query);
   }
-  
+
   // update extension rating score
   $query = '
 SELECT rate
@@ -1258,7 +1258,7 @@ SELECT rate
   WHERE idx_extension = '.$extension_id.'
 ;';
   $rates = query2array($query, null, 'rate');
-  
+
   $query = '
 UPDATE '.EXT_TABLE.'
   SET rating_score = '.(count($rates)>0 ? array_sum($rates)/count($rates) : 'NULL').'
@@ -1273,7 +1273,7 @@ UPDATE '.EXT_TABLE.'
 function insert_user_review(&$comm)
 {
   global $conf, $user, $db;
-  
+
   // check required fields
   if ( empty($comm['author']) or empty($comm['email']) or empty($comm['content']) or empty($comm['rate']) )
   {
@@ -1281,7 +1281,7 @@ function insert_user_review(&$comm)
     $comm['message'] = l10n('One or more required fields are empty');
     return;
   }
-  
+
   // check email validity
   if (filter_var($comm['email'], FILTER_VALIDATE_EMAIL) === false)
   {
@@ -1289,13 +1289,13 @@ function insert_user_review(&$comm)
     $comm['message'] = l10n('Mail address must be like xxx@yyy.eee (example : jack@altern.org)');
     return;
   }
-  
+
   // check spam with Akismet
   if (!empty($conf['askimet_key']))
   {
     include_once($root_path . 'include/akismet.class.php');
     $akismet = new Akismet($conf['website_url'], $conf['askimet_key'], $comm);
-    
+
     if ( !$akismet->errorsExist() and $akismet->isSpam() )
     {
       $comm['action'] = 'reject';
@@ -1303,10 +1303,10 @@ function insert_user_review(&$comm)
       return;
     }
   }
-  
+
   // remove all html tags
   $comm['content'] = strip_tags($comm['content']);
-  
+
   // anonymous id = ip address
   $user_anonymous = empty($user['id']);
   $user_id = $user_anonymous ? 0 : $user['id'];
@@ -1317,7 +1317,7 @@ function insert_user_review(&$comm)
     array_pop($ip_components);
   }
   $anonymous_id = implode('.', $ip_components);
-  
+
   // comment validation and anti-spam
   if ( !$conf['comments_validation'] or isAdmin(@$user['id']) )
   {
@@ -1326,9 +1326,9 @@ function insert_user_review(&$comm)
   else if ($conf['anti-flood_time'] > 0)
   {
     $query = '
-SELECT COUNT(1) 
+SELECT COUNT(1)
   FROM '.REVIEW_TABLE.'
-  WHERE 
+  WHERE
     date > SUBDATE(NOW(), INTERVAL '.$conf['anti-flood_time'].' SECOND)
     AND idx_user = '.$user_id;
   if ($user_anonymous)
@@ -1355,7 +1355,7 @@ SELECT COUNT(1)
   {
     $comm['action'] = 'moderate';
   }
-  
+
   // insert comment
   if ($comm['action'] != 'reject')
   {
@@ -1363,12 +1363,12 @@ SELECT COUNT(1)
     {
       $comm['title'] = substr($comm['content'], 0, 64);
     }
-    
+
     if (empty($comm['idx_language']))
     {
       $comm['idx_language'] = 0;
     }
-  
+
     $query = '
 INSERT INTO '.REVIEW_TABLE.' (
     idx_user,
@@ -1378,7 +1378,7 @@ INSERT INTO '.REVIEW_TABLE.' (
     author,
     email,
     title,
-    content, 
+    content,
     rate,
     anonymous_id,
     validated
@@ -1401,13 +1401,13 @@ INSERT INTO '.REVIEW_TABLE.' (
     $db->query($query);
     $comm['id'] = $db->insert_id();
     rate_extension($comm['idx_extension'], $comm['rate']);
-    
+
     if ( $conf['email_admin_on_comment_validation'] !== false and $comm['action'] == 'moderate' )
     {
       $u_delete = get_absolute_home_url().'admin/reviews.php?delete_review='.$comm['id'];
       $u_validate = get_absolute_home_url().'admin/reviews.php?validate_review='.$comm['id'];
       $extension_infos = get_extension_infos_of($comm['idx_extension']);
-      
+
       $content = '
 <i>Extension:</i> '.$extension_infos['name'].'<br>
 <i>Author:</i> '.$comm['author'].'<br>
@@ -1437,13 +1437,13 @@ INSERT INTO '.REVIEW_TABLE.' (
 function delete_user_review($id)
 {
   global $db;
-  
+
   $query = '
 DELETE FROM '.REVIEW_TABLE.'
   WHERE id_review = '.$id.'
 ;';
   $db->query($query);
-  
+
   return $db->affected_rows() > 0;
 }
 
@@ -1453,7 +1453,7 @@ DELETE FROM '.REVIEW_TABLE.'
 function validate_user_review($id)
 {
   global $db, $conf;
-  
+
   $query = '
 SELECT
     email,
@@ -1465,22 +1465,22 @@ SELECT
     AND validated = "false"
 ';
   $result = $db->query($query);
-  
+
   if ($db->num_rows($result))
   {
     list($comm['email'], $comm['idx_extension'], $comm['author']) = $db->fetch_row($result);
-    
+
     $query = '
 UPDATE '.REVIEW_TABLE.'
   SET validated = "true"
   WHERE id_review = '.$id.'
 ;';
     $db->query($query);
-    
-    
+
+
     $u_extension = get_absolute_home_url().'extension_view.php?eid='.$comm['idx_extension'];
     $extension_infos = get_extension_infos_of($comm['idx_extension']);
-    
+
     $content = '
 Hello '.$comm['author'].',<br>
 Your review about <a href="'.$u_extension.'">'.$extension_infos['name'].'</a> has been validated by an administrator.<br>
@@ -1495,7 +1495,7 @@ please do not answer to this automated email.
       $content,
       array('content_format'=>'text/html')
       );
-      
+
     return true;
   }
   else
@@ -1510,16 +1510,16 @@ please do not answer to this automated email.
 function get_tag_ids($raw_tags, $allow_create=true)
 {
   // In $raw_tags we receive something like "~~6~~,~~59~~,New tag,Another new tag"
-  // The ~~34~~ means that it is an existing tag. I've added the surrounding ~~ 
+  // The ~~34~~ means that it is an existing tag. I've added the surrounding ~~
   // to permit creation of tags like "10" or "1234" (numeric characters only)
-  
+
   if (empty($raw_tags)) return array();
-  
+
   global $db, $conf, $interface_languages;
 
   $tag_ids = array();
   $raw_tags = explode(',',$raw_tags);
-  
+
   foreach ($raw_tags as $raw_tag)
   {
     if (preg_match('/^~~(\d+)~~$/', $raw_tag, $matches))
@@ -1566,7 +1566,7 @@ SELECT id_tag
 function get_tag_name_from_id($id)
 {
   global $db;
-  
+
   $query = '
 SELECT
     name
@@ -1574,7 +1574,7 @@ SELECT
   WHERE id_tag = '.$id.'
 ;';
   $result = $db->query($query);
-  
+
   list($name) = $db->fetch_row($result);
   return $name;
 }

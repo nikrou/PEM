@@ -62,7 +62,7 @@ $result = $db->query($query);
 $db_languages = array();
 $db_int_languages = array();
 $db_ext_languages = array();
-while ($row = mysql_fetch_assoc($result))
+while ($row = $db->fetch_assoc($result))
 {
   $db_languages[$row['code']] = $row['id_language'];
   if ($row['interface'] == 'true')
@@ -154,7 +154,7 @@ UPDATE '.LANG_TABLE.'
 // Display language ids
 $query = 'SELECT id_language, code FROM '.LANG_TABLE.';';
 $result = $db->query($query);
-while ($row = mysql_fetch_assoc($result))
+while ($row = $db->fetch_assoc($result))
 {
   if (isset($int_languages[$row['code']]))
   {
@@ -179,4 +179,3 @@ $tpl->assign(array(
 $tpl->assign_var_from_handle('main_content', 'languages');
 $tpl->parse('page');
 $tpl->p();
-?>

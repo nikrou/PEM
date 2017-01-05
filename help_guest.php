@@ -52,4 +52,3 @@ include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
 $tpl->parse('page');
 $tpl->p();
-?>

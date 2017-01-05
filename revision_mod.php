@@ -36,4 +36,3 @@ else
 }
 
 include($root_path.'revision_add.php');
-?>

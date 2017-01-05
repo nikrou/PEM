@@ -31,7 +31,7 @@ $page['nb_extensions'] = 10;
 $filtered_sets = array();
 if (isset($_GET['categories'])) {
   $categories = $_GET['categories'];
-  
+
   if (!preg_match('/^\d+(,\d+)*$/', $categories)) {
     die('unexpected categories identifier');
   }
@@ -59,7 +59,7 @@ if (count($filtered_sets) > 0) {
 }
 
 // TODO: merge this code with what include/index_view_standard.inc.php does
-// 
+//
 // retrieve N last updated extensions
 $query = '
 SELECT
@@ -105,7 +105,7 @@ if (count($all_revision_ids) > 0) {
 
   foreach ($revision_ids as $revision_id) {
     $eid = $revision_infos_of[$revision_id]['idx_extension'];
-  
+
     array_push(
       $revisions,
       array(
@@ -132,4 +132,3 @@ switch ($format) {
   default :
     echo json_encode($revisions);
 }
-?>

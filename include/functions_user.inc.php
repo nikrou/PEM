@@ -34,10 +34,10 @@ function log_user($user_id, $username, $password)
   global $conf, $user;
 
   $conf['set_cookie']($user_id, $conf['pass_convert']($password));
-  
+
   session_set_cookie_params($conf['session_length']);
   //session_start();
-  
+
   $user['id'] = $user_id;
   $user['username'] = $username;
 }
@@ -52,7 +52,7 @@ function get_user_infos_of($user_ids)
   if (count($user_ids) == 0) {
     return array();
   }
-  
+
   $user_infos_of = get_user_basic_infos_of($user_ids);
 
   $query = '
@@ -61,7 +61,7 @@ SELECT *
   WHERE idx_user IN ('.implode(',', $user_ids).')
 ;';
   $result = $db->query($query);
-  while ($row = $db->fetch_array($result))
+  while ($row = $db->fetch_assoc($result))
   {
     $user_infos_of[ $row['idx_user'] ] = array_merge(
       $user_infos_of[ $row['idx_user'] ],
@@ -78,7 +78,7 @@ SELECT *
 function get_admin_email()
 {
   global $conf;
-  
+
   $query = '
 SELECT '.$conf['user_fields']['email'].' AS email
   FROM '.USERS_TABLE.'
@@ -155,5 +155,3 @@ function get_author_name($ids)
   }
   return $result;
 }
-
-?>

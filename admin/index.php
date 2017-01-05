@@ -39,7 +39,7 @@ SELECT
 ;';
 $req = $db->query($sql);
 $data = $db->fetch_assoc($req);
-  
+
 $tpl->assign('revisions_count', $data['revisions_count']);
 
 // Are there extension without a single revision?
@@ -92,4 +92,3 @@ if ($count > 0) {
 
 $tpl->assign_var_from_handle('main_content', 'index');
 $tpl->pparse('page');
-?>

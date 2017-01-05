@@ -27,7 +27,7 @@ if (!isset($tpl->files['page']))
   $tpl->set_filename('page', 'page.tpl');
 }
 $tpl->set_filename('message', 'message.tpl');
-  
+
 if ($page['message']['is_success'])
 {
   if (!isset($page['message']['title']))
@@ -39,7 +39,7 @@ if ($page['message']['is_success'])
   {
     $page['message']['time_redirect'] = $conf['time_redirect'];
   }
-  
+
   if (isset($page['message']['redirect']))
   {
     $tpl->assign(
@@ -88,4 +88,3 @@ include($root_path.'include/footer.inc.php');
 $tpl->parse('page');
 $tpl->p();
 exit();
-?>

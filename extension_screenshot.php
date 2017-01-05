@@ -54,7 +54,7 @@ function get_picture_size(
     $height = $max_height;
     $width = floor(($height * $original_width) / $original_height);
   }
-  
+
   return array('width' => $width, 'height' => $height);
 }
 
@@ -109,7 +109,7 @@ function resize_picture(
     $destination_dimensions['width'],
     $destination_dimensions['height']
     );
-  
+
   imagecopyresampled(
     $destination_image,
     $source_image,
@@ -121,7 +121,7 @@ function resize_picture(
     );
 
   imagejpeg($destination_image, $destination_filename, 95);
-  
+
   // freeing memory ressources
   imagedestroy($source_image);
   imagedestroy($destination_image);
@@ -144,36 +144,26 @@ if (!isset($user['id']))
 }
 
 // We need a valid extension
-$page['extension_id'] =
-  (isset($_GET['eid']) and is_numeric($_GET['eid']))
-  ? $_GET['eid']
-  : '';
+$page['extension_id'] = (isset($_GET['eid']) and is_numeric($_GET['eid'])) ? $_GET['eid'] : '';
 
-if (empty($page['extension_id']))
-{
+if (empty($page['extension_id'])) {
   message_die('Incorrect extension identifier');
 }
 
 $authors = get_extension_authors($page['extension_id']);
 
-if (!in_array($user['id'], $authors) and !isAdmin($user['id']))
-{
+if (!in_array($user['id'], $authors) and !isAdmin($user['id'])) {
   message_die('You must be the extension author to modify it.');
 }
 
-$query = '
-SELECT
-    name
-  FROM '.EXT_TABLE.'
-  WHERE id_extension = '.$page['extension_id'].'
-;';
+$query = 'SELECT name FROM '.EXT_TABLE.' WHERE id_extension = '.$page['extension_id'];
 $result = $db->query($query);
 
-if ($db->num_rows($result) == 0)
-{
+if ($db->num_rows($result) == 0) {
   message_die('Unknown extension');
 }
-list($page['extension_name']) = $db->fetch_array($result);
+$row = $db->fetch_assoc($result);
+$page['extension_name'] = $row['name'];
 
 // +-----------------------------------------------------------------------+
 // |                           Form submission                             |
@@ -194,7 +184,7 @@ if (isset($_POST['submit_add']))
         die("problem during ".$extension_dir." creation");
       }
     }
-    
+
     $temp_name = get_extension_dir($page['extension_id']).'/screenshot.tmp';
     if (!move_uploaded_file($_FILES['picture']['tmp_name'], $temp_name))
     {
@@ -203,7 +193,7 @@ if (isset($_POST['submit_add']))
     else
     {
       list($width, $height, $type) = getimagesize($temp_name);
-      
+
       // $type == 2 means JPG
       // $type == 3 means PNG
       if (!in_array($type, array(2, 3)))
@@ -222,7 +212,7 @@ if (isset($_POST['submit_add']))
           $conf['screenshot_maxwidth'],
           $conf['screenshot_maxheight']
           );
-        
+
         if ($width != $new_dimensions['width']
             or $height > $new_dimensions['height'])
         {
@@ -231,7 +221,7 @@ if (isset($_POST['submit_add']))
             $screenshot_filename,
             $new_dimensions
             );
-          
+
           $width  = $new_dimensions['width'];
           $height = $new_dimensions['height'];
 
@@ -264,7 +254,7 @@ if (isset($_POST['submit_add']))
 if (isset($_POST['submit_delete']))
 {
   $screenshot_infos = get_extension_screenshot_infos($page['extension_id']);
-  
+
   if ($screenshot_infos)
   {
     unlink($screenshot_infos['thumbnail_src']);
@@ -306,4 +296,3 @@ include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
 $tpl->parse('page');
 $tpl->p();
-?>

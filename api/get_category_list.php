@@ -35,7 +35,7 @@ $query = '
 SELECT
     id_category AS id,
     c.name AS default_name,
-    ct.name    
+    ct.name
   FROM '.CAT_TABLE.' AS c
   LEFT JOIN '.CAT_TRANS_TABLE.' AS ct
     ON c.id_category = ct.idx_category
@@ -49,7 +49,7 @@ foreach ($output as $i => $category) {
     $output[$i]['name'] = $output[$i]['default_name'];
   }
   unset($output[$i]['default_name']);
-  
+
   $output[$i]['counter'] = 0;
   if (isset($nb_ext_of_category[ $category['id'] ])) {
     $output[$i]['counter'] = $nb_ext_of_category[ $category['id'] ];
@@ -71,4 +71,3 @@ switch ($format) {
   default :
     echo json_encode($output);
 }
-?>

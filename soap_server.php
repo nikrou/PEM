@@ -77,10 +77,10 @@ $server->wsdl->addComplexType(
 
 $server->wsdl->addComplexType(
   'RevisionList',
-  'complexType', 
-  'array', 
-  '', 
-  'SOAP-ENC:Array', 
+  'complexType',
+  'array',
+  '',
+  'SOAP-ENC:Array',
   array(),
   array(
     array(
@@ -105,8 +105,8 @@ $server->register(
 
 function getRevisionList($version, $category_id) {
   global $db, $conf;
-  
-  $version = mysql_real_escape_string($version);
+
+  $version = $db->escape($version);
 
   if ($category_id != abs(intval($category_id))) {
     die('unexpected category identifier');
@@ -135,7 +135,7 @@ SELECT
   $author_ids = array();
   $revisions = array();
   $result = $db->query($query);
-  while ($row = mysql_fetch_assoc($result)) {
+  while ($row = $db->fetch_assoc($result)) {
     $row['revision_date'] = date('Y-m-d H:i:s', $row['revision_date']);
 
     $row['revision_url'] = sprintf(
@@ -158,7 +158,7 @@ SELECT
     $revisions[$revision_index]['extension_author']
         = $user_basic_infos_of[ $revision['author_id'] ]['username'];
   }
-  
+
   // echo '<pre>'; print_r($revisions); echo '<pre/>';
 
   return $revisions;
@@ -181,7 +181,7 @@ SELECT
     version
   FROM '.VER_TABLE.'
 ;';
-  
+
   return implode(',', versort(query2array($query, null, 'version')));
 }
 
@@ -241,10 +241,10 @@ $server->wsdl->addComplexType(
 
 $server->wsdl->addComplexType(
   'revision_list',
-  'complexType', 
-  'array', 
-  '', 
-  'SOAP-ENC:Array', 
+  'complexType',
+  'array',
+  '',
+  'SOAP-ENC:Array',
   array(),
   array(
     array(
@@ -269,8 +269,8 @@ $server->register(
 
 function get_revision_list($version, $category_id) {
   global $db, $conf;
-  
-  $version = mysql_real_escape_string($version);
+
+  $version = $db->escape($version);
 
   if ($category_id != abs(intval($category_id))) {
     die('unexpected category identifier');
@@ -299,7 +299,7 @@ SELECT
   $author_ids = array();
   $revisions = array();
   $result = $db->query($query);
-  while ($row = mysql_fetch_assoc($result)) {
+  while ($row = $db->fetch_assoc($result)) {
     $row['revision_date'] = date('Y-m-d H:i:s', $row['revision_date']);
 
     $row['file_url'] = sprintf(
@@ -328,7 +328,7 @@ SELECT
     $revisions[$revision_index]['extension_author']
         = $user_basic_infos_of[ $revision['author_id'] ]['username'];
   }
-  
+
   // echo '<pre>'; print_r($revisions); echo '<pre/>';
 
   return $revisions;
@@ -341,4 +341,3 @@ $HTTP_RAW_POST_DATA = isset($GLOBALS['HTTP_RAW_POST_DATA'])
 ;
 $server->service($HTTP_RAW_POST_DATA);
 exit();
-?>

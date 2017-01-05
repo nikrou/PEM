@@ -83,7 +83,7 @@ SELECT
   WHERE id_version = '.$page['version_id'].'
 ;';
   $data = $db->fetch_assoc($db->query($query));
-  
+
   $tpl->assign('version_id', $data['id_version']);
   $tpl->assign('name', $data['version']);
 }
@@ -134,4 +134,3 @@ $tpl->assign('f_action', 'versions.php');
 $tpl->assign_var_from_handle('main_content', 'versions');
 $tpl->parse('page');
 $tpl->p();
-?>

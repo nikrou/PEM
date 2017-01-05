@@ -138,7 +138,7 @@ SELECT idx_tag,
   WHERE idx_tag = '.$page['tag_id'].'
 ;';
   $result = $db->query($query);
-  while($row = mysql_fetch_assoc($result))
+  while($row = $db->fetch_assoc($result))
   {
     $name[$row['idx_language']] = $row['name'];
   }
@@ -188,4 +188,3 @@ $tpl->assign('f_action', 'tags.php');
 $tpl->assign_var_from_handle('main_content', 'tags');
 $tpl->parse('page');
 $tpl->p();
-?>

@@ -38,7 +38,7 @@ class DBLayer
 	var $num_queries = 0;
 
 
-	function DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect)
+	function __construct($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect)
 	{
 		$this->prefix = $db_prefix;
 
@@ -75,7 +75,7 @@ class DBLayer
   function my_error($header)
   {
     global $conf;
-    
+
     $error = '<pre>';
     $error.= $header;
     $error.= '[mysql error '.mysql_errno().'] ';

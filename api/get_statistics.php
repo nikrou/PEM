@@ -50,7 +50,7 @@ $filter = array();
 $category_ids = null;
 if (isset($_GET['categories'])) {
   $categories = $_GET['categories'];
-  
+
   if (!preg_match('/^\d+(,\d+)*$/', $categories)) {
     die('unexpected categories identifier');
   }
@@ -63,7 +63,7 @@ if (count($filter) > 0) {
   if (isset($_GET['category_mode']) and $_GET['category_mode'] == 'or') {
     $filter['category_mode'] = 'or';
   }
-  
+
   $page['filtered_extension_ids'] = get_filtered_extension_ids($filter);
 
   if (count($page['filtered_extension_ids']) == 0) {
@@ -89,10 +89,10 @@ if (count($filter) > 0) {
   $query.= '
   WHERE id_extension IN ('.$page['filtered_extension_ids_string'].')';
 }
-  
+
   $query.= '
 ;';
-list($output['nb_extensions']) = mysql_fetch_row($db->query($query));
+list($output['nb_extensions']) = $db->fetch_row($db->query($query));
 
 // +-----------------------------------------------------------------------+
 // |                          number of revisions                          |
@@ -107,11 +107,11 @@ if (count($filter) > 0) {
   $query.= '
   WHERE idx_extension IN ('.$page['filtered_extension_ids_string'].')';
 }
-  
+
   $query.= '
-  
+
 ;';
-list($output['nb_revisions']) = mysql_fetch_row($db->query($query));
+list($output['nb_revisions']) = $db->fetch_row($db->query($query));
 
 // +-----------------------------------------------------------------------+
 // |                         all contributor ids                           |
@@ -126,7 +126,7 @@ if (count($filter) > 0) {
   $query.= '
   WHERE id_extension IN ('.$page['filtered_extension_ids_string'].')';
 }
-  
+
   $query.= '
 ;';
 $contributor_ids = query2array($query, null, 'idx_user');
@@ -146,10 +146,10 @@ if (count($filter) > 0) {
     JOIN '.REV_TABLE.' ON idx_revision = id_revision
   WHERE idx_extension IN ('.$page['filtered_extension_ids_string'].')';
 }
-  
+
   $query.= '
 ;';
-list($output['nb_downloads']) = mysql_fetch_row($db->query($query));
+list($output['nb_downloads']) = $db->fetch_row($db->query($query));
 
 // +-----------------------------------------------------------------------+
 // |                            top contributors                           |
@@ -178,7 +178,7 @@ $query.= '
 ;';
 $result = $db->query($query);
 
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = $db->fetch_assoc($result)) {
   array_push($contributor_ids, $row['idx_user']);
   array_push(
     $contributors,
@@ -223,7 +223,7 @@ $query.= '
   LIMIT 10
 ;';
 $result = $db->query($query);
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = $db->fetch_assoc($result)) {
   $duration = sprintf('%u', (time() - $row['max_date']) / (60*60*24));
   if ($duration == 0) {
     $duration_string = 'today';
@@ -234,7 +234,7 @@ while ($row = mysql_fetch_assoc($result)) {
   else {
     $duration_string = $duration.' days';
   }
-  
+
   array_push(
     $most_recent,
     array(
@@ -316,7 +316,7 @@ $query.= '
 ;';
 
 $result = $db->query($query);
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = $db->fetch_assoc($result)) {
   array_push(
     $most_active,
     array(
@@ -350,5 +350,3 @@ switch ($format) {
   default :
     echo json_encode($output);
 }
-
-?>

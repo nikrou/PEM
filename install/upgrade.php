@@ -33,7 +33,7 @@ require_once($root_path . 'include/dblayer/common_db.php');
 
 $query = 'SHOW TABLES LIKE "'.LANG_TABLE.'";';
 $result = $db->query($query);
-if (!mysql_fetch_row($result))
+if (!$db->fetch_row($result))
 {
   $query = '
 CREATE TABLE  `'.LANG_TABLE.'` (
@@ -51,7 +51,7 @@ CREATE TABLE  `'.LANG_TABLE.'` (
 }
 $query = 'SELECT COUNT(*) FROM '.LANG_TABLE.';';
 $result = $db->query($query);
-$row = mysql_fetch_row($result);
+$row = $db->fetch_row($result);
 if($row[0] == 0)
 {
   // Get dir languages
@@ -110,7 +110,7 @@ $languages = get_languages_from_table();
 function get_columns_of($tables)
 {
   global $db;
-  
+
   $columns_of = array();
 
   foreach ($tables as $table)
@@ -122,7 +122,7 @@ DESC '.$table.'
 
     $columns_of[$table] = array();
 
-    while ($row = mysql_fetch_row($result))
+    while ($row = $db->fetch_row($result))
     {
       array_push($columns_of[$table], $row[0]);
     }
@@ -138,7 +138,7 @@ function get_languages_from_table()
   $query = 'SELECT id_language, code FROM '.LANG_TABLE.';';
   $result = $db->query($query);
   $languages = array();
-  while ($row = mysql_fetch_assoc($result))
+  while ($row = $db->fetch_assoc($result))
   {
     $code = substr($row['code'], 0, 2);
     $languages[$code] = $row['id_language'];
@@ -157,7 +157,7 @@ function get_converted_translations($type, $column, $table, $trans_table)
   $result = $db->query($query);
   $translations = array();
 
-  while ($row = mysql_fetch_assoc($result))
+  while ($row = $db->fetch_assoc($result))
   {
     $id = $row['id_'.$type];
     $desc = $row[$column];
@@ -260,7 +260,7 @@ SELECT id_link,
 ;';
   $result = $db->query($query);
   $links_lang = array();
-  while ($row = mysql_fetch_assoc($result))
+  while ($row = $db->fetch_assoc($result))
   {
     $links_lang[$row['id_link']] = $row['lang'];
   }
@@ -299,7 +299,7 @@ UPDATE '.LINKS_TABLE.'
 $query = 'SHOW TABLES LIKE "'.EXT_TRANS_TABLE.'";';
 $result = $db->query($query);
 
-if (!mysql_fetch_row($result))
+if (!$db->fetch_row($result))
 {
   // Add column idx_default_language
   $query = 'ALTER TABLE '.EXT_TABLE.' ADD `idx_language` INT( 11 ) NOT NULL AFTER `description` ';
@@ -327,7 +327,7 @@ CREATE TABLE `'.EXT_TRANS_TABLE.'` (
 
 $query = 'SHOW TABLES LIKE "'.REV_TRANS_TABLE.'";';
 $result = $db->query($query);
-if (!mysql_fetch_row($result))
+if (!$db->fetch_row($result))
 {
   // Add column idx_default_language
   $query = 'ALTER TABLE '.REV_TABLE.' ADD `idx_language` INT( 11 ) NOT NULL AFTER `description` ';
@@ -355,7 +355,7 @@ CREATE TABLE `'.REV_TRANS_TABLE.'` (
 
 $query = 'SHOW TABLES LIKE "'.CAT_TRANS_TABLE.'";';
 $result = $db->query($query);
-if (!mysql_fetch_row($result))
+if (!$db->fetch_row($result))
 {
   // Add column idx_default_language
   $query = 'ALTER TABLE '.CAT_TABLE.' ADD `idx_language` INT( 11 ) NOT NULL AFTER `description` ';
@@ -393,7 +393,7 @@ if (!in_array('nb_downloads', $columns[REV_TABLE]))
   $db->query($query);
 
   $updates = array();
-  
+
   $query = '
 SELECT
     idx_revision AS id_revision,
@@ -426,7 +426,7 @@ SELECT
 
 $query = 'SHOW TABLES LIKE "'.TAG_TABLE.'";';
 $result = $db->query($query);
-if (!mysql_fetch_row($result))
+if (!$db->fetch_row($result))
 {
   $query = '
 CREATE TABLE `'.TAG_TABLE.'` (
@@ -438,7 +438,7 @@ CREATE TABLE `'.TAG_TABLE.'` (
 ;';
   $db->query($query);
   array_push($upgrade_infos, 'Tags table has been created');
-  
+
   $query = '
 CREATE TABLE `'.EXT_TAG_TABLE.'` (
   `idx_extension` int(11) NOT NULL default \'0\',
@@ -456,7 +456,7 @@ CREATE TABLE `'.EXT_TAG_TABLE.'` (
 
 $query = 'SHOW TABLES LIKE "'.RATE_TABLE.'";';
 $result = $db->query($query);
-if (!mysql_fetch_row($result))
+if (!$db->fetch_row($result))
 {
   $query = '
 CREATE TABLE `'.RATE_TABLE.'` (
@@ -468,10 +468,10 @@ CREATE TABLE `'.RATE_TABLE.'` (
   PRIMARY KEY (`idx_user`,`idx_extension`,`anonymous_id`)
 ) DEFAULT CHARSET=utf8;';
   $db->query($query);
-  
+
   $query = 'ALTER TABLE '.EXT_TABLE.' ADD `rating_score` float(5,2) unsigned DEFAULT NULL AFTER `archive_name`;';
   $db->query($query);
-  
+
   array_push($upgrade_infos, 'Rates table has been created');
 }
 
@@ -481,7 +481,7 @@ CREATE TABLE `'.RATE_TABLE.'` (
 
 $query = 'SHOW TABLES LIKE "'.REVIEW_TABLE.'";';
 $result = $db->query($query);
-if (!mysql_fetch_row($result))
+if (!$db->fetch_row($result))
 {
   $query = '
 CREATE TABLE `'.REVIEW_TABLE.'` (
@@ -519,7 +519,7 @@ if (!in_array('idx_language', $columns[REVIEW_TABLE]))
 
 $query = 'SHOW TABLES LIKE "'.TAG_TRANS_TABLE.'";';
 $result = $db->query($query);
-if (!mysql_fetch_row($result))
+if (!$db->fetch_row($result))
 {
   $query = '
 CREATE TABLE `'.TAG_TRANS_TABLE.'` (
@@ -529,7 +529,7 @@ CREATE TABLE `'.TAG_TRANS_TABLE.'` (
   PRIMARY KEY  (`idx_tag`, `idx_language`)
 ) DEFAULT CHARSET=utf8;';
   $db->query($query);
-  
+
   array_push($upgrade_infos, 'Tag translations table has been created');
 }
 
@@ -538,11 +538,11 @@ if (!in_array('idx_language', $columns[TAG_TABLE]))
 {
   $query = 'ALTER TABLE '.TAG_TABLE.' ADD `idx_language` int(11) NOT NULL;';
   $db->query($query);
-  
+
   $query = 'UPDATE '.TAG_TABLE.' SET idx_language = '.$interface_languages[$conf['default_language']]['id'].';';
   $db->query($query);
-  
-  
+
+
   array_push($upgrade_infos, '- new column '.TAG_TABLE.'.idx_language');
 }
 
@@ -571,5 +571,3 @@ else
 {
   echo implode("<br>\n", $upgrade_infos);
 }
-
-?>

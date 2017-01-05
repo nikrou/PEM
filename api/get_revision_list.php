@@ -37,10 +37,10 @@ if (isset($_GET['categories']) or isset($_GET['category_id'])) {
     }
     $categories = $_GET['category_id'];
   }
-  
+
   if (isset($_GET['categories'])) {
     $categories = $_GET['categories'];
-  
+
     if (!preg_match('/^\d+(,\d+)*$/', $categories)) {
       die('unexpected categories identifier');
     }
@@ -134,7 +134,7 @@ if (isset($extension_exclude))
 
 $extension_authors = array();
 $result = $db->query($query);
-while ($row = mysql_fetch_assoc($result))
+while ($row = $db->fetch_assoc($result))
 {
   if (!isset($extension_authors[$row['extension_id']]))
   {
@@ -197,7 +197,7 @@ $query .= '
 if (isset($_GET['last_revision_only']) and $_GET['last_revision_only'] == 'true')
 {
   $query = '
-SELECT t.* 
+SELECT t.*
   FROM (' . $query . ') AS t
   GROUP BY t.extension_id';
 }
@@ -206,9 +206,9 @@ $extension_ids = array();
 $revision_ids = array();
 $revisions = array();
 $result = $db->query($query);
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = $db->fetch_assoc($result)) {
   $row['revision_date'] = date('Y-m-d H:i:s', $row['revision_date']);
-  
+
   $row['file_url'] = sprintf(
     '%s/%s',
     $conf['website_url'],
@@ -273,4 +273,3 @@ switch ($format) {
   default :
     echo json_encode($revisions);
 }
-?>

@@ -136,7 +136,7 @@ SELECT idx_category,
   WHERE idx_category = '.$page['category_id'].'
 ;';
   $result = $db->query($query);
-  while($row = mysql_fetch_assoc($result))
+  while($row = $db->fetch_assoc($result))
   {
     $name[$row['idx_language']] = $row['name'];
   }
@@ -184,4 +184,3 @@ $tpl->assign('f_action', 'categories.php');
 $tpl->assign_var_from_handle('main_content', 'categories');
 $tpl->parse('page');
 $tpl->p();
-?>

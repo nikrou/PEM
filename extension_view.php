@@ -21,7 +21,7 @@
 define( 'INTERNAL', true );
 $root_path = './';
 require_once( $root_path . 'include/common.inc.php' );
-  
+
 $page['extension_id'] = isset($_GET['eid']) ? abs(intval($_GET['eid'])) : null;
 if (!isset($page['extension_id']))
 {
@@ -46,10 +46,10 @@ if (isset($_GET['action']))
       rate_extension($page['extension_id'], $_POST['score']);
       header('Location: '.$self_url);
       break;
-     
+
     case 'add_review':
       if (empty($_POST)) break;
-      
+
       $user_review = array(
         'idx_extension' => $page['extension_id'],
         'author' => trim($_POST['author']),
@@ -59,7 +59,7 @@ if (isset($_GET['action']))
         'rate' => (float)@$_POST['score'],
         'idx_language' => $_POST['idx_language'],
         );
-      
+
       insert_user_review($user_review);
       switch ($user_review['action'])
       {
@@ -68,33 +68,33 @@ if (isset($_GET['action']))
           $user_review['action'] = 'validate';
           $user_review['message'] = l10n('Thank you!');
           break;
-          
+
         case 'moderate':
           unset($user_review);
           $user_review['action'] = 'moderate';
           $user_review['message'] = l10n('Thank you! Your review is awaiting moderation.');
           break;
-          
+
         case 'reject':
           $user_review['display'] = true;
           break;
       }
-      
+
       break;
-      
+
     case 'edit_review':
       if (!isAdmin(@$user['id'])) break;
-      
+
       $query = '
 UPDATE '.REVIEW_TABLE.'
-  SET 
-    title = "'.$_POST['title'].'", 
+  SET
+    title = "'.$_POST['title'].'",
     content = "'.$_POST['content'].'"
   WHERE
     id_review = '.$_POST['id_review'].'
 ;';
       $db->query($query);
-      
+
       header('Location: '.$self_url.'#reviews');
       break;
   }
@@ -126,7 +126,7 @@ if (!isset($data['id_extension']))
 $authors = get_extension_authors($page['extension_id']);
 
 $page['user_can_modify'] = false;
-if (isset($user['id']) and 
+if (isset($user['id']) and
   (isAdmin($user['id']) or isTranslator($user['id']) or in_array($user['id'], $authors)))
 {
   $page['user_can_modify'] = true;
@@ -145,13 +145,13 @@ $versions_of_extension = get_versions_of_extension(
 $categories_of_extension = get_categories_of_extension(
   array($page['extension_id'])
   );
-  
+
 $tags_of_extension = get_tags_of_extension(
   array($page['extension_id'])
   );
 
 // print_array($categories_of_extension);
-  
+
 // download statistics
 $query = '
 SELECT
@@ -191,7 +191,7 @@ $tpl->assign(
     'extension_tags' => $tags_of_extension[$page['extension_id']],
     )
   );
-  
+
 if (isset($user['id']))
 {
   if ($page['user_can_modify'])
@@ -219,7 +219,7 @@ if (isset($user['id']))
   if ($conf['allow_svn_file_creation'] and $user['extension_owner'])
   {
     $tpl->assign('u_svn', 'extension_svn.php?eid='.$page['extension_id']);
-      
+
   }
 }
 
@@ -261,7 +261,7 @@ SELECT name,
 ;';
 $result = $db->query($query);
 
-while ($row = $db->fetch_array($result))
+while ($row = $db->fetch_assoc($result))
 {
   array_push(
     $tpl_links,
@@ -289,7 +289,7 @@ if (isset($_SESSION['filter']['id_version']))
   $query.= '
     AND idx_version = '.$_SESSION['filter']['id_version'];
 }
-  
+
 $query.= '
 ;';
 $revision_ids = query2array($query, null, 'id_revision');
@@ -301,7 +301,7 @@ if (count($revision_ids) > 0)
   $versions_of = get_versions_of_revision($revision_ids);
   $languages_of = get_languages_of_revision($revision_ids);
   $diff_languages_of = get_diff_languages_of_extension($page['extension_id']);
-  
+
   $revisions = array();
 
   $query = '
@@ -323,9 +323,9 @@ SELECT id_revision,
   $first_date = '';
 
   $is_first_revision = true;
-  
-  $result = $db->query($query);  
-  while ($row = $db->fetch_array($result))
+
+  $result = $db->query($query);
+  while ($row = $db->fetch_assoc($result))
   {
     if (empty($row['description']))
     {
@@ -366,7 +366,7 @@ SELECT id_revision,
         'u_modify' => 'revision_mod.php?rid='.$row['id_revision'],
         'u_delete' => 'revision_del.php?rid='.$row['id_revision'],
         'expanded' => isset($_GET['rid']) && $row['id_revision'] == $_GET['rid'],
-        'downloads' => isset($downloads_of_revision[$row['id_revision']]) ? 
+        'downloads' => isset($downloads_of_revision[$row['id_revision']]) ?
                         $downloads_of_revision[$row['id_revision']] : 0,
         );
 
@@ -398,9 +398,9 @@ SELECT id_revision,
 
 // rating
 $rate_summary = array(
-  'count' => 0, 
-  'count_text' => sprintf(l10n('Rated %d times'), 0), 
-  'rating_score' => generate_static_stars($data['rating_score']), 
+  'count' => 0,
+  'count_text' => sprintf(l10n('Rated %d times'), 0),
+  'rating_score' => generate_static_stars($data['rating_score']),
   );
 if ($rate_summary['rating_score'] != null)
 {
@@ -418,11 +418,11 @@ $user_rate = null;
 if ($rate_summary['count'] > 0)
 {
   $user_id = empty($user['id']) ? 0 : $user['id'];
-  
+
   $query = '
 SELECT rate
   FROM '.RATE_TABLE.'
-  WHERE 
+  WHERE
     idx_extension = '.$page['extension_id']. '
     AND idx_user = '.$user_id.'';
   if ($user_id == 0)
@@ -448,7 +448,7 @@ $tpl->assign('user_rating', array(
   'action' => $self_url.'&amp;action=rate',
   'rate' => $user_rate,
   ));
-  
+
 // REVIEWS
 // total reviews in each language
 $current_language_id = get_current_language_id();
@@ -458,7 +458,7 @@ SELECT
     idx_language,
     COUNT(1) AS count
   FROM '.REVIEW_TABLE.'
-  WHERE 
+  WHERE
     idx_extension = '.$page['extension_id'].'
     '.(!isAdmin(@$user['id']) ? 'AND validated = "true"' : null).'
   GROUP BY idx_language
@@ -502,16 +502,16 @@ foreach ($all_reviews as $review)
   $review['in_edit'] = false;
   $review['rate'] = generate_static_stars($review['rate'], false);
   $review['date'] = date('d F Y', strtotime($review['date']));
-  
+
   if (isAdmin(@$user['id']))
   {
-    if ( isset($_GET['edit_review']) and $_GET['edit_review'] == $review['id_review'] ) 
+    if ( isset($_GET['edit_review']) and $_GET['edit_review'] == $review['id_review'] )
     {
       $review['in_edit'] = true;
       $review['u_cancel'] = $self_url;
       $review['action'] = $self_url.'&amp;action=edit_review';
     }
-    
+
                                          $review['u_delete']   = $self_url.'&amp;delete_review='.$review['id_review'];
     if (!$review['in_edit'])             $review['u_edit']     = $self_url.'&amp;edit_review='.$review['id_review'];
     if ($review['validated'] == 'false') $review['u_validate'] = $self_url.'&amp;validate_review='.$review['id_review'];
@@ -520,12 +520,12 @@ foreach ($all_reviews as $review)
   {
     unset($review['email']);
   }
-  
+
   if (!$review['in_edit'])
   {
     $review['content'] = nl2br($review['content']);
   }
-  
+
   if ($review['idx_language'] == $current_language_id)
   {
     array_push($language_reviews, $review);
@@ -563,4 +563,3 @@ include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
 $tpl->parse('page');
 $tpl->p();
-?>

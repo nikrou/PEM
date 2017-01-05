@@ -80,7 +80,7 @@ $revisions = array();
 foreach ($revision_ids as $revision_id)
 {
   $extension_id = $revision_infos_of[$revision_id]['idx_extension'];
-  
+
   array_push(
     $revisions,
     array(
@@ -118,4 +118,3 @@ $tpl->assign(
 include($root_path.'include/header.inc.php');
 $tpl->assign_var_from_handle('main_content', 'index_view_compact');
 include($root_path.'include/footer.inc.php');
-?>

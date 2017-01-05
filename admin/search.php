@@ -35,14 +35,14 @@ if (isset($_POST['compatibility_check']))
 {
   $compatibles = get_extension_ids_for_version($_POST['version0']);
   !empty($compatibles) or $compatibles=array(0);
-  
+
   $query = '
 SELECT id_extension
   FROM '.EXT_TABLE.'
   WHERE id_extension NOT IN('. implode(',', $compatibles) .')
 ;';
   $id_extensions = query2array($query, null, 'id_extension');
-  
+
   if (!empty($id_extensions))
   {
     $query = '
@@ -58,7 +58,7 @@ SELECT
   {
     $extensions = array();
   }
-  
+
   $tpl->assign(array(
     'extensions' => $extensions,
     'version0' => $_POST['version0'],
@@ -70,16 +70,16 @@ if (isset($_POST['inter_compatibility_check']))
   $compatibles = get_extension_ids_for_version($_POST['version1']);
   $compatibles2 = get_extension_ids_for_version($_POST['version2']);
   !empty($compatibles2) or $compatibles2=array(0);
-  
+
   $query = '
 SELECT id_extension
   FROM '.EXT_TABLE.'
   WHERE id_extension NOT IN('. implode(',', $compatibles2) .')
 ;';
   $incompatibles = query2array($query, null, 'id_extension');
-  
+
   $id_extensions = array_intersect($compatibles, $incompatibles);
-  
+
   if (!empty($id_extensions))
   {
     $query = '
@@ -95,7 +95,7 @@ SELECT
   {
     $extensions = array();
   }
-  
+
   $tpl->assign(array(
     'inter_extensions' => $extensions,
     'version1' => $_POST['version1'],
@@ -141,4 +141,3 @@ $tpl->assign('f_action', 'search.php');
 $tpl->assign_var_from_handle('main_content', 'search');
 $tpl->parse('page');
 $tpl->p();
-?>

@@ -48,4 +48,3 @@ $tpl->assign('extensions', query2array($query));
 
 $tpl->assign_var_from_handle('main_content', 'empty_extensions');
 $tpl->pparse('page');
-?>

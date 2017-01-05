@@ -24,7 +24,7 @@ if (!defined('INTERNAL'))
 }
 $root_path = './';
 require_once($root_path.'include/common.inc.php');
-  
+
 if (!isset($user['id']))
 {
   message_die('You must be connected to reach this page.');
@@ -41,7 +41,7 @@ $tpl->set_filenames(
 if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
 {
   $revision_infos_of = get_revision_infos_of(array($page['revision_id']));
-  
+
   $page['extension_id'] =
     $revision_infos_of[ $page['revision_id'] ]['idx_extension'];
 }
@@ -75,7 +75,14 @@ if ($db->num_rows($result) == 0)
 {
   message_die('Unknown extension');
 }
-list($page['extension_name'], $ext_user, $svn_url, $git_url, $archive_root_dir, $archive_name) = $db->fetch_array($result);
+
+$ext_row = $db->fetch_assoc($result);
+$page['extension_name'] = $ext_row['name'];
+$ext_user = $ext_row['idx_user'];
+$svn_url = $ext_row['svn_url'];
+$git_url = $ext_row['git_url'];
+$archive_root_dir = $ext_row['archive_root_dir'];
+$archive_name = $ext_row['archive_name'];
 
 $authors = get_extension_authors($page['extension_id']);
 
@@ -95,7 +102,7 @@ if (isset($_POST['submit']))
   {
     $query = 'SELECT idx_language FROM '.REV_TABLE.' WHERE id_revision = '.$page['revision_id'].';';
     $result = $db->query($query);
-    list($def_language) = mysql_fetch_array($result);
+    list($def_language) = $db->fetch_assoc($result);
 
     $query = '
 DELETE
@@ -134,7 +141,7 @@ DELETE
           );
       }
     }
-    
+
     if (empty($page['errors']))
     {
       if (!empty($inserts))
@@ -150,7 +157,7 @@ UPDATE '.REV_TABLE.'
 ;';
         $db->query($query);
       }
-    
+
       message_success(
         'Revision successfuly added. Thank you.',
         sprintf(
@@ -160,7 +167,7 @@ UPDATE '.REV_TABLE.'
           $page['revision_id']
           )
         );
-        
+
       unset($_POST);
     }
   }
@@ -190,7 +197,7 @@ UPDATE '.REV_TABLE.'
     {
       $page['errors'][] = l10n('Only *.zip files are allowed');
     }
-  
+
     // Check file size
     else if ($_FILES['revision_file']['error'] == UPLOAD_ERR_INI_SIZE)
     {
@@ -279,12 +286,12 @@ UPDATE '.REV_TABLE.'
 
       // SVN export
       $git_command = $conf['git_path'] . ' clone --depth=1';
-      
+
       if (isset($_POST['git_branch']) and 'master' != $_POST['git_branch'])
       {
         $git_command .= ' -b '.escapeshellarg($_POST['git_branch']);
       }
-      
+
       $git_command .= ' ' . escapeshellarg($git_url);
       $git_command .= ' ' . $temp_path;
 
@@ -299,7 +306,7 @@ UPDATE '.REV_TABLE.'
         $archive_name = str_replace('%', @$_POST['revision_version'], $archive_name);
 
         unset($git_infos);
-        
+
         $working_dir = getcwd();
         chdir($temp_path);
         $git_command = $conf['git_path'].' log ';
@@ -323,7 +330,7 @@ UPDATE '.REV_TABLE.'
             $git_date = $matches[1];
           }
         }
-        
+
         $revision = $git_commit.' ('.$git_date.')';
 
         if (!empty($conf['archive_comment']) and !file_exists($temp_path.'/'.$conf['archive_comment_filename']))
@@ -370,7 +377,7 @@ UPDATE '.REV_TABLE.'
     'revision_version',
     'compatible_versions',
     );
-  
+
   foreach ($required_fields as $field)
   {
     if (empty($_POST[$field]))
@@ -385,7 +392,7 @@ UPDATE '.REV_TABLE.'
     @deltree($temp_path);
     $page['errors'][] = l10n('Default description can not be empty');
   }
-  
+
   if (empty($page['errors']))
   {
     if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
@@ -418,7 +425,7 @@ DELETE
       $insert = array(
         'version'        => $db->escape($_POST['revision_version']),
         'idx_extension'  => $page['extension_id'],
-        'date'           => mktime(),
+        'date'           => time(),
         'description'    => $db->escape($_POST['revision_descriptions'][$_POST['default_description']]),
         'idx_language'   => $db->escape($_POST['default_description']),
         'url'            => $archive_name,
@@ -432,7 +439,7 @@ DELETE
           : 'false'
           ;
       }
-      
+
       mass_inserts(
         REV_TABLE,
         array_keys($insert),
@@ -448,7 +455,7 @@ DELETE
       // upload/extension-X/revision-Y
       $extension_dir = $conf['upload_dir'].'extension-'.$page['extension_id'];
       $revision_dir = $extension_dir.'/revision-'.$page['revision_id'];
-      
+
       if (!is_dir($extension_dir))
       {
         umask(0000);
@@ -457,7 +464,7 @@ DELETE
           die("problem during ".$extension_dir." creation");
         }
       }
-      
+
       umask(0000);
       @mkdir($revision_dir, 0777);
 
@@ -513,7 +520,7 @@ DELETE
     WHERE idx_revision = '.$page['revision_id'].'
   ;';
     $db->query($query);
-    
+
     // Inserts the revisions <-> compatibilities link
     $inserts = array();
     foreach ($_POST['compatible_versions'] as $version_id)
@@ -569,7 +576,7 @@ DELETE
         $page['revision_id']
         )
       );
-      
+
     unset($_POST);
   }
 }
@@ -591,14 +598,14 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_mod.php')
   $version = isset($_POST['revision_version']) ? $_POST['revision_version'] : $revision_infos_of[ $page['revision_id'] ]['version'];
   $selected_versions = isset($_POST['compatible_versions']) ? $_POST['compatible_versions'] : $version_ids_of_revision[ $page['revision_id'] ];
   $selected_author = isset($_POST['author']) ? $_POST['author'] : $revision_infos_of[ $page['revision_id'] ]['author'];
-  $selected_languages = isset($_POST['extensions_languages']) ? $_POST['extensions_languages'] : 
+  $selected_languages = isset($_POST['extensions_languages']) ? $_POST['extensions_languages'] :
     (!empty($language_ids_of_revision[$page['revision_id']]) ? $language_ids_of_revision[$page['revision_id']] : array());
 
   $accept_agreement = get_boolean(
     $revision_infos_of[ $page['revision_id'] ]['accept_agreement'],
     false // default value
     );
-  
+
   if ($accept_agreement)
   {
     $accept_agreement_checked = 'checked="checked"';
@@ -624,7 +631,7 @@ SELECT idx_language,
   WHERE id_revision = '.$page['revision_id'].'
 ;';
     $result = $db->query($query);
-    if ($row = mysql_fetch_assoc($result))
+    if ($row = $db->fetch_assoc($result))
     {
       $descriptions[$row['idx_language']] = $row['description'];
       $default_language = $row['idx_language'];
@@ -637,12 +644,12 @@ SELECT idx_language,
   WHERE idx_revision = '.$page['revision_id'].'
 ;';
     $result = $db->query($query);
-    while($row = mysql_fetch_assoc($result))
+    while($row = $db->fetch_assoc($result))
     {
       $descriptions[$row['idx_language']] = $row['description'];
     }
   }
-  
+
   $tpl->assign('IN_EDIT', true);
 }
 else
@@ -660,7 +667,7 @@ SELECT MAX(id_revision) as id
   FROM '.REV_TABLE.'
   WHERE idx_extension = '.$page['extension_id'].';';
 
-  if ($last_rev = mysql_fetch_assoc($db->query($query))
+  if ($last_rev = $db->fetch_assoc($db->query($query))
     and !empty($last_rev['id']))
   {
     $language_ids_of_revision = get_language_ids_of_revision(array($last_rev['id']));
@@ -691,7 +698,7 @@ $tpl->assign(
     'file_needed' => (basename($_SERVER['SCRIPT_FILENAME']) == 'revision_add.php' ? true : false),
     )
   );
-  
+
 // Get the main application versions listing
 $query = '
 SELECT
@@ -824,4 +831,3 @@ include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
 $tpl->parse('page');
 $tpl->p();
-?>

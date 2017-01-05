@@ -42,5 +42,3 @@ if (isset($subversion_revision)) {
 }
 
 $tpl->assign('footer', $footer);
-
-?>

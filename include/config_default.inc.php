@@ -230,4 +230,3 @@ $conf['local_data_dir'] = dirname(dirname(__FILE__)).'/_data';
 
 // do you want visitors to register somewhere else?
 $conf['external_register_url'] = null;
-?>

@@ -45,8 +45,8 @@ define(
   $conf['db_params']['tables_prefix'].'download_log'
   );
 
-  
-define( 'EXTENSIONS_PER_PAGE', 3 );
-define( 'PUN_TURN_OFF_MAINT', 1 );
-define( 'PUN_QUIET_VISIT', 1 );
-?>
+
+define('EXTENSIONS_PER_PAGE', 3);
+define('PUN_ROOT', __DIR__.'/../');
+define('PUN_TURN_OFF_MAINT', 1);
+define('PUN_QUIET_VISIT', 1);

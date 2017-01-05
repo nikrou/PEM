@@ -43,7 +43,7 @@ $query = '
 SELECT
     id_category,
     c.name AS default_name,
-    ct.name    
+    ct.name
   FROM '.CAT_TABLE.' AS c
   LEFT JOIN '.CAT_TRANS_TABLE.' AS ct
     ON c.id_category = ct.idx_category
@@ -142,7 +142,7 @@ foreach ($versions as $version)
     array_push($page_title, l10n('Version').': '.$version['version']);
     $selected = 'selected="selected"';
   }
-  
+
   array_push(
     $tpl_versions,
     array(
@@ -165,7 +165,7 @@ $tpl->assign('menu_versions', $tpl_versions);
 
 // filter on authors
 /*$query = '
-SELECT idx_user, SUM(counter) AS counter 
+SELECT idx_user, SUM(counter) AS counter
   FROM (
     SELECT
         idx_user,
@@ -196,7 +196,7 @@ foreach ($user_infos_of as $author) {
   {
     $selected = 'selected="selected"';
   }
-    
+
   array_push(
     $tpl_filter_users,
     array(
@@ -251,18 +251,18 @@ if (count($tpl_tags))
     {
       $tag['name'] = $tag['default_name'];
     }
-  
+
     $selected = false;
     if ( isset($_SESSION['filter']['tag_ids']) and $_SESSION['filter']['tag_ids'][0] == $tag['id_tag'] )
     {
       $selected = true;
       array_push($page_title, l10n('Tag').': '.$tag['name']);
     }
-    
+
     $tag['size'] = $adapt_range($tag['count']);
     $tag['url'] = 'index.php?tid='.$tag['id_tag'];
     $tag['selected'] = $selected;
-    
+
     if ($i<10) $tpl->append('tags', $tag);
     else $tpl->append('more_tags', $tag);
     $i++;
@@ -306,6 +306,3 @@ else
     $tpl->assign('external_register', true);
   }
 }
-
-// echo '<pre>'; print_r($tpl->get_template_vars()); echo '</pre>';
-?>

@@ -62,13 +62,13 @@ $user = array();
 
 if (isset($_COOKIE[ $conf['user_cookie_name'] ])) {
   $cookie = array();
-  
+
   list($cookie['user_id'], $cookie['password_hash']) = unserialize(
     stripslashes($_COOKIE[ $conf['user_cookie_name'] ])
     );
 
   // echo '<pre>'; print_r($cookie); echo '</pre>';
-  
+
   $user_infos_of = get_user_infos_of(array($cookie['user_id']));
   $user = $user_infos_of[$cookie['user_id']];
 
@@ -80,7 +80,7 @@ if (isset($_COOKIE[ $conf['user_cookie_name'] ])) {
       $cookie['password_hash']
       )
     );
-  
+
   if (md5($conf['cookie_seed'].$user['password']) !== $cookie['password_hash']) {
     $user = array();
   }
@@ -164,7 +164,7 @@ if (isset($_POST['filter_submit'])) {
   else {
     unset($_SESSION['filter']['search']);
   }
-  
+
   // filter on a user
   if (isset($_POST['id_user']) and is_numeric($_POST['id_user'])) {
     if ($_POST['id_user'] != 0) {
@@ -190,7 +190,7 @@ if (isset($_POST['filter_reset']) or isset($_POST['filter_submit'])) {
 // if a filter is active, we must prepare a filtered list of extensions
 if (isset($_SESSION['filter']) and count($_SESSION['filter']) > 0) {
   $page['filtered_extension_ids'] = get_filtered_extension_ids($_SESSION['filter']);
-  
+
   $page['filtered_extension_ids_string'] = implode(
     ',',
     $page['filtered_extension_ids']
@@ -217,7 +217,7 @@ if (isset($_GET['action']) and $_GET['action']=='logout')
 {
   $_SESSION = array();
   $user = array();
-  
+
   session_unset();
   session_destroy();
   setcookie(
@@ -234,5 +234,3 @@ if (isset($_GET['action']) and $_GET['action']=='logout')
   // redirect to index
   message_success('Logout successful', 'index.php');
 }
-
-?>

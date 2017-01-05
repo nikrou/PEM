@@ -67,7 +67,7 @@ if ($db->num_rows($result) == 0)
 {
   message_die('Incorrect extension identifier');
 }
-list($page['extension_name']) = $db->fetch_array($result);
+list($page['extension_name']) = $db->fetch_assoc($result);
 
 // +-----------------------------------------------------------------------+
 // |                           Form submission                             |
@@ -80,7 +80,7 @@ SELECT '.$conf['user_fields']['id'].' AS id
   FROM '.USERS_TABLE.'
   WHERE '.$conf['user_fields']['id'].' = '. $db->escape($_POST['author_select']) .'
 ;';
-  list($author_id) = $db->fetch_array($db->query($query));
+  list($author_id) = $db->fetch_assoc($db->query($query));
 
   if (empty($author_id))
   {
@@ -182,7 +182,7 @@ SELECT '.$conf['user_fields']['id'].' AS id,
 $result = $db->query($query);
 
 $users = array(0 => '');
-while ($row = mysql_fetch_assoc($result))
+while ($row = $db->fetch_assoc($result))
 {
   if (!empty($row['username']))
   {
@@ -208,4 +208,3 @@ include($root_path.'include/header.inc.php');
 include($root_path.'include/footer.inc.php');
 $tpl->parse('page');
 $tpl->p();
-?>

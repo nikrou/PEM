@@ -23,7 +23,7 @@
  */
 function delete_category($category_id) {
   global $db;
-  
+
   $query = '
 DELETE
   FROM '.EXT_CAT_TABLE.'
@@ -51,7 +51,7 @@ DELETE
  */
 function delete_tag($tag_id) {
   global $db;
-  
+
   $query = '
 DELETE
   FROM '.EXT_TAG_TABLE.'
@@ -94,5 +94,3 @@ DELETE
 ;';
   $db->query($query);
 }
-
-?>

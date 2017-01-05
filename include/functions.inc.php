@@ -66,7 +66,7 @@ function get_absolute_home_url($with_scheme=true)
 function cookie_path()
 {
   global $root_path;
-  
+
   if ( isset($_SERVER['REDIRECT_SCRIPT_NAME']) and
        !empty($_SERVER['REDIRECT_SCRIPT_NAME']) )
   {
@@ -128,7 +128,7 @@ function cookie_path()
 function versort($array)
 {
   if (empty($array)) return array();
-  
+
   if (is_array($array[0])) {
     usort($array, 'pem_version_compare');
   }
@@ -152,7 +152,7 @@ function pem_version_compare($a, $b)
  */
 function compare_field($a, $b) {
   global $sort_field;
-  
+
   if ($a[$sort_field] == $b[$sort_field]) {
     return 0;
   }
@@ -175,7 +175,7 @@ function sort_by_field($array, $fieldname) {
 function message_die($message, $title = 'Error', $go_back = true)
 {
   global $root_path, $tpl, $db, $user, $page, $conf;
-  
+
   $page['message'] = array(
     'title' => l10n($title),
     'is_success' => false,
@@ -191,7 +191,7 @@ function message_die($message, $title = 'Error', $go_back = true)
 function message_success($message, $redirect, $title = 'Success', $time_redirect = '5')
 {
   global $root_path, $tpl, $db, $user, $page, $conf;
-  
+
   $page['message']['title'] = l10n($title);
   $page['message']['is_success'] = true;
   $page['message']['message'] = l10n($message);
@@ -238,7 +238,7 @@ function get_moment()
 function array_from_subfield($hash, $field)
 {
   $array = array();
-  
+
   foreach ($hash as $row)
   {
     array_push($array, $row[$field]);
@@ -337,7 +337,7 @@ function debug($var) {
 function get_boolean($string, $default = true)
 {
   $boolean = $default;
-  
+
   if (preg_match('/^false$/i', $string))
   {
     $boolean = false;
@@ -347,7 +347,7 @@ function get_boolean($string, $default = true)
   {
     $boolean = true;
   }
-  
+
   return $boolean;
 }
 
@@ -357,6 +357,7 @@ function get_boolean($string, $default = true)
  * strings are protected only in the $db->query function
  */
 function fix_magic_quotes($var = NULL, $sybase = NULL) {
+    return true;
   // if sybase style quoting isn't specified, use ini setting
   if (!isset($sybase)) {
     $sybase = ini_get ('magic_quotes_sybase');
@@ -367,7 +368,7 @@ function fix_magic_quotes($var = NULL, $sybase = NULL) {
     // if magic quotes is enabled
     if (get_magic_quotes_gpc()) {
       // workaround because magic_quotes does not change $_SERVER['argv']
-      $argv = isset($_SERVER['argv']) ? $_SERVER['argv'] : NULL; 
+      $argv = isset($_SERVER['argv']) ? $_SERVER['argv'] : NULL;
 
       // fix all affected arrays
       foreach (array('_ENV', '_REQUEST', '_GET', '_POST', '_COOKIE', '_SERVER') as $var) {
@@ -415,7 +416,7 @@ function fix_magic_quotes($var = NULL, $sybase = NULL) {
 function pun_setcookie($user_id, $password_hash)
 {
   global $conf;
-  
+
   $cookie_name = $conf['user_cookie_name'];
   $cookie_domain = '';
   $cookie_path = $conf['cookie_path'];
@@ -480,17 +481,17 @@ function deltree($path)
 function generate_static_stars($score, $space=true)
 {
   if ($score === null) return null;
-  
+
   $score = min(max($score, 0), 5);
   $floor = floor($score);
   $space = $space ? "\n" : null;
-  
+
   $html = null;
   for ($i=1; $i<=$floor; $i++)
   {
     $html.= '<img alt="'.$i.'" src="template/jquery.raty/star-on.png">'.$space;
   }
-  
+
   if ($score != 5)
   {
     if ($score-$floor <= .25)
@@ -505,13 +506,13 @@ function generate_static_stars($score, $space=true)
     {
       $html.= '<img alt="'.($floor+1).'" src="template/jquery.raty/star-on.png">'.$space;
     }
-  
+
     for ($i=$floor+2; $i<=5; $i++)
     {
       $html.= '<img alt="'.$i.'" src="template/jquery.raty/star-off.png">'.$space;
     }
   }
-  
+
   return $html;
 }
 
@@ -633,15 +634,15 @@ function flush_page_messages()
 function safe_version_compare($a, $b, $op=null)
 {
   $replace_chars = create_function('$m', 'return ord(strtolower($m[1]));');
-  
+
   // add dot before groups of letters (version_compare does the same thing)
   $a = preg_replace('#([0-9]+)([a-z]+)#i', '$1.$2', $a);
   $b = preg_replace('#([0-9]+)([a-z]+)#i', '$1.$2', $b);
-  
+
   // apply ord() to any single letter
   $a = preg_replace_callback('#\b([a-z]{1})\b#i', $replace_chars, $a);
   $b = preg_replace_callback('#\b([a-z]{1})\b#i', $replace_chars, $b);
-  
+
   if (empty($op))
   {
     return version_compare($a, $b);
@@ -651,5 +652,3 @@ function safe_version_compare($a, $b, $op=null)
     return version_compare($a, $b, $op);
   }
 }
-
-?>
