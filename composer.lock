@@ -1,23 +1,23 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dec08b3f7286b5c6301e8dd5e28f213a",
+    "content-hash": "799ccf05e8ca9e7fec78baade5f11830",
     "packages": [
         {
             "name": "smarty/smarty",
-            "version": "v2.6.28",
+            "version": "v2.6.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "0ecdd6c41d0de08cba846087abd02a9adb5218e5"
+                "reference": "4ab9757b492f08a38f68123a6e7c1df7110bbc49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/0ecdd6c41d0de08cba846087abd02a9adb5218e5",
-                "reference": "0ecdd6c41d0de08cba846087abd02a9adb5218e5",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/4ab9757b492f08a38f68123a6e7c1df7110bbc49",
+                "reference": "4ab9757b492f08a38f68123a6e7c1df7110bbc49",
                 "shasum": ""
             },
             "require": {
@@ -55,7 +55,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2014-10-31 00:07:20"
+            "time": "2017-11-03T06:39:13+00:00"
         }
     ],
     "packages-dev": [
@@ -65,32 +65,41 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/atoum/atoum.git",
-                "reference": "9b87d03f0a8dbb7ee6bd434c06e3b9d8971ad1ba"
+                "reference": "24ec4c46f4036113439e1e38e92252d65a328bfa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/atoum/atoum/zipball/9b87d03f0a8dbb7ee6bd434c06e3b9d8971ad1ba",
-                "reference": "9b87d03f0a8dbb7ee6bd434c06e3b9d8971ad1ba",
+                "url": "https://api.github.com/repos/atoum/atoum/zipball/24ec4c46f4036113439e1e38e92252d65a328bfa",
+                "reference": "24ec4c46f4036113439e1e38e92252d65a328bfa",
                 "shasum": ""
             },
             "require": {
                 "ext-hash": "*",
                 "ext-json": "*",
-                "ext-session": "*",
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
-                "php": ">=5.3.3"
+                "php": "^5.6.0 || ^7.0.0 <7.4.0"
             },
             "replace": {
                 "mageekguy/atoum": "*"
             },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~1.12"
+            },
             "suggest": {
-                "ext-mbstring": "Provides support for UTF-8 strings"
+                "atoum/stubs": "Provides IDE support (like autocompletion) for atoum",
+                "ext-mbstring": "Provides support for UTF-8 strings",
+                "ext-xdebug": "Provides code coverage report (>= 2.3)"
             },
             "bin": [
                 "bin/atoum"
             ],
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
                     "classes/"
@@ -98,7 +107,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD"
+                "BSD-3-Clause"
             ],
             "authors": [
                 {
@@ -131,7 +140,7 @@
                 "test",
                 "unit testing"
             ],
-            "time": "2014-11-21 14:50:10"
+            "time": "2017-11-06T21:02:33+00:00"
         }
     ],
     "aliases": [],
@@ -140,6 +149,7 @@
         "atoum/atoum": 20
     },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": {
         "php": ">=5.3.0"
     },

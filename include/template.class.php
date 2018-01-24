@@ -32,11 +32,11 @@ class Template {
   // used by html_head smarty block to add content before </head>
   var $html_head_elements = array();
 
-  function Template($root = ".")
+  function __construct($root = ".")
   {
     global $conf;
 
-    $this->smarty = new Smarty;
+    $this->smarty = new Smarty();
     $this->smarty->debugging = $conf['debug_template'];
     $this->smarty->compile_check = $conf['template_compile_check'];
 
