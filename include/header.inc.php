@@ -242,7 +242,7 @@ $tpl_tags = query2array($query, 'id_tag');
 if (count($tpl_tags))
 {
     $counts = array_map(function($v) { return $v["count"];}, $tpl_tags);
-    $adapt_range = function($v) { return ('.max($counts).'-'.min($counts).' != 0) ? ($v-'.min($counts).')/(2*('.max($counts).'-'.min($counts).'))+1 : 1;}
+    $adapt_range = function($v) use ($counts) { return (max($counts) - min($counts) != 0) ? ($v - min($counts))/(2*(max($counts) - min($counts)))+1 : 1;};
 
   $i = 0;
   foreach($tpl_tags as $tag)

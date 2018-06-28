@@ -930,7 +930,7 @@ function get_extension_ids_for_search($search) {
         )
       )
     );
-  $add_bracked = function(&$s) { $s="(".$s.")";}
+  $add_bracked = function(&$s) { $s="(".$s.")";};
 
   // search on extension name
   $word_clauses = array();
