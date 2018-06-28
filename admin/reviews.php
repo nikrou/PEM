@@ -50,8 +50,8 @@ $tpl_reviews = query2array($query);
 
 if (count($tpl_reviews))
 {
-  $extensions_ids = array_map(create_function('$v', 'return $v["idx_extension"];'), $tpl_reviews);
-  $extensions_infos_of = get_extension_infos_of($extensions_ids);
+    $extensions_ids = array_map(function($v) {return $v["idx_extension"];}, $tpl_reviews);
+    $extensions_infos_of = get_extension_infos_of($extensions_ids);
 
   foreach ($tpl_reviews as &$review)
   {

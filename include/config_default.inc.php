@@ -71,7 +71,7 @@ $conf['user_fields'] = array(
 
 // pass_convert : function to crypt or hash the clear user password to store
 // it in the database
-$conf['pass_convert'] = create_function('$s', 'return md5($s);');
+$conf['pass_convert'] = function($s) { return md5($s); };
 
 // session_length: in seconds
 $conf['session_length'] = 60 * 60 * 24 * 30; // 1 month by default

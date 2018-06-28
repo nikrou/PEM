@@ -633,22 +633,22 @@ function flush_page_messages()
  */
 function safe_version_compare($a, $b, $op=null)
 {
-  $replace_chars = create_function('$m', 'return ord(strtolower($m[1]));');
+    $replace_chars = function($m) { return ord(strtolower($m[1])); };
 
-  // add dot before groups of letters (version_compare does the same thing)
-  $a = preg_replace('#([0-9]+)([a-z]+)#i', '$1.$2', $a);
-  $b = preg_replace('#([0-9]+)([a-z]+)#i', '$1.$2', $b);
+    // add dot before groups of letters (version_compare does the same thing)
+    $a = preg_replace('#([0-9]+)([a-z]+)#i', '$1.$2', $a);
+    $b = preg_replace('#([0-9]+)([a-z]+)#i', '$1.$2', $b);
 
-  // apply ord() to any single letter
-  $a = preg_replace_callback('#\b([a-z]{1})\b#i', $replace_chars, $a);
-  $b = preg_replace_callback('#\b([a-z]{1})\b#i', $replace_chars, $b);
+    // apply ord() to any single letter
+    $a = preg_replace_callback('#\b([a-z]{1})\b#i', $replace_chars, $a);
+    $b = preg_replace_callback('#\b([a-z]{1})\b#i', $replace_chars, $b);
 
-  if (empty($op))
-  {
-    return version_compare($a, $b);
-  }
-  else
-  {
-    return version_compare($a, $b, $op);
-  }
+    if (empty($op))
+    {
+        return version_compare($a, $b);
+    }
+    else
+    {
+        return version_compare($a, $b, $op);
+    }
 }

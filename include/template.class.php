@@ -120,18 +120,14 @@ class Template {
     {
       return false;
     }
-    reset($filename_array);
-    while(list($handle, $filename) = each($filename_array))
-    {
-      if (is_null($filename))
-      {
-        unset($this->files[$handle]);
-      }
-      else
-      {
-        $this->files[$handle] = $filename;
-      }
+    foreach ($filename_array as $handle => $filename) {
+        if (is_null($filename)) {
+            unset($this->files[$handle]);
+        } else {
+            $this->files[$handle] = $filename;
+        }
     }
+
     return true;
   }
 

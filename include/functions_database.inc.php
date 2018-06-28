@@ -168,15 +168,15 @@ UPDATE '.$tablename.' AS t1, '.$temporary_tablename.' AS t2
       implode(
         "\n    , ",
         array_map(
-          create_function('$s', 'return "t1.$s = t2.$s";'),
-          $dbfields['update']
+            function($s) { return "t1.$s = t2.$s";},
+            $dbfields['update']
           )
         ).'
   WHERE '.
       implode(
         "\n    AND ",
         array_map(
-          create_function('$s', 'return "t1.$s = t2.$s";'),
+            function($s) { return "t1.$s = t2.$s";},
           $dbfields['primary']
           )
         ).'
