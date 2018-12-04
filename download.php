@@ -1,22 +1,13 @@
 <?php
-// +-----------------------------------------------------------------------+
-// | PEM - a PHP based Extension Manager                                   |
-// | Copyright (C) 2005-2013 PEM Team - http://piwigo.org                  |
-// +-----------------------------------------------------------------------+
-// | This program is free software; you can redistribute it and/or modify  |
-// | it under the terms of the GNU General Public License as published by  |
-// | the Free Software Foundation                                          |
-// |                                                                       |
-// | This program is distributed in the hope that it will be useful, but   |
-// | WITHOUT ANY WARRANTY; without even the implied warranty of            |
-// | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      |
-// | General Public License for more details.                              |
-// |                                                                       |
-// | You should have received a copy of the GNU General Public License     |
-// | along with this program; if not, write to the Free Software           |
-// | Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, |
-// | USA.                                                                  |
-// +-----------------------------------------------------------------------+
+/*
+* This file is part of PEM package
+*
+* Copyright(c) Nicolas Roudaire  https://www.nikrou.net/
+* Licensed under the GPL version 2.0 license.
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 // the mission of this file is to count the download and to send the file
 // content in attachement to the HTTP response.
@@ -52,13 +43,13 @@ function set_status_header($code, $text='')
       case 503: $text='Service unavailable';break;
     }
   }
-  
+
   $protocol = $_SERVER["SERVER_PROTOCOL"];
   if ( ('HTTP/1.1' != $protocol) && ('HTTP/1.0' != $protocol) )
   {
     $protocol = 'HTTP/1.0';
   }
-  
+
   if ( version_compare( phpversion(), '4.3.0', '>=' ) )
   {
     header( "$protocol $code $text", true, $code );
@@ -182,4 +173,3 @@ foreach ($http_headers as $header) {
 // +-----------------------------------------------------------------------+
 
 @readfile($file);
-?>

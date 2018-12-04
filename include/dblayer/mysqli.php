@@ -46,10 +46,11 @@ class DBLayer
 		if (strpos($db_host, ':') !== false)
 			list($db_host, $db_port) = explode(':', $db_host);
 
-		if (isset($db_port))
-			$this->link_id = @mysqli_connect($db_host, $db_username, $db_password, $db_name, $db_port);
-		else
-			$this->link_id = @mysqli_connect($db_host, $db_username, $db_password, $db_name);
+		if (isset($db_port)) {
+			$this->link_id = new \mysqli($db_host, $db_username, $db_password, $db_name, $db_port);
+        } else  {
+			$this->link_id = new \mysqli($db_host, $db_username, $db_password, $db_name);
+        }
 
 		if (!$this->link_id)
 			error('Unable to connect to MySQL and select database. MySQL reported: '.mysqli_connect_error(), __FILE__, __LINE__);
