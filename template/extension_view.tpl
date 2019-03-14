@@ -14,7 +14,7 @@ jQuery(function(){ldelim}
     cancelPlace: 'right',
     size:18, half: true,
     click: function(score, event) {ldelim}
-      $("#user_rate").submit(); 
+      $("#user_rate").submit();
     }
     {if isset($user_rating.rate)}, cancel: true, start: {$user_rating.rate}{/if}
   });
@@ -22,7 +22,7 @@ jQuery(function(){ldelim}
     $(this).slideUp();
     $("#user_rate").slideDown();
   });
-  
+
   $("#review_form #review_rate").raty({ldelim}
     path: "template/jquery.raty/",
     half: true
@@ -36,7 +36,7 @@ jQuery(function(){ldelim}
     $("#review_form .language").toggle();
     return false;
   });
-  
+
   $("#review_form").submit(function() {ldelim}
     if ($("#review_form input[name='author']").val() == '') {ldelim}
       alert("{'Please enter your name'|@translate}");
@@ -55,7 +55,7 @@ jQuery(function(){ldelim}
       return false;
     }
   });
-  
+
   // restore interface for users with JS
   {if !isset($user_review.display)}
   $("#review_form").hide();
@@ -76,7 +76,7 @@ jQuery(function(){ldelim}
     <li><a href="{$u_delete}" onclick="return confirm('{'Are you sure you want to delete this item?'|@translate|escape:javascript}');" title="{'Delete extension'|@translate}"><img src="template/images/delete.png" alt="{'Delete extension'|@translate}"></a></li>
   {/if}
   <li><a href="{$u_links}" title="{'Manage links'|@translate}"><img src="template/images/links.png" alt="{'Manage links'|@translate}"></a></li>
-  <li><a href="{$u_screenshot}" title="{'Manage screenshots'|@translate}"><img src="template/images/screenshot.png" alt="{'Manage screenshots'|@translate}"></a></li> 
+  <li><a href="{$u_screenshot}" title="{'Manage screenshots'|@translate}"><img src="template/images/screenshot.png" alt="{'Manage screenshots'|@translate}"></a></li>
   <li><a href="{$u_add_rev}" title="{'Add a revision'|@translate}"><img src="template/images/add_revision.png" alt="{'Add a revision'|@translate}"></a></li>
   {if isset($u_authors)}
     <li><a href="{$u_authors}" title="{'Manage authors'|@translate}"><img src="template/images/authors.png" alt="{'Manage authors'|@translate}"></a></li>
@@ -110,14 +110,14 @@ jQuery(function(){ldelim}
       <div></div>
     </form>
   </div>
-  
+
 {if isset($thumbnail)}
 <a class="screenshot" href="{$thumbnail.url}"><img src="{$thumbnail.src}"/></a>
 {/if}
 
 </div>
 <ul class="extensionInfos">
-  <li><em>{if count($authors)>1}{'Authors'|@translate}{else}{'Author'|@translate}{/if}:</em> 
+  <li><em>{if count($authors)>1}{'Authors'|@translate}{else}{'Author'|@translate}{/if}:</em>
     {strip}{foreach from=$authors item=u_name key=u_id name=authors_loop}
       {if not $smarty.foreach.authors_loop.first}, {/if}<a href="index.php?uid={$u_id}">{$u_name}</a>
     {/foreach}{/strip}
@@ -214,7 +214,7 @@ jQuery(function(){ldelim}
   {if !empty($rev.author)}
       <p><em>{'Added by'|@translate}:</em> {$rev.author}</p>
   {/if}
-    
+
       <blockquote>
         <p>{$rev.description}</p>
       </blockquote>
@@ -239,7 +239,7 @@ jQuery(function(){ldelim}
 <!-- reviews -->
 {if $nb_reviews > 0}
 <h3>
-  {$nb_reviews} {'Reviews'|@translate} 
+  {$nb_reviews} {'Reviews'|@translate}
   <a id="review_form_show" name="add_review" style="font-size:0.8em;"><img src="template/images/comment.gif"> {'Add a review'|@translate}</a>
 </h3>
 {else}
@@ -251,19 +251,23 @@ jQuery(function(){ldelim}
 <form id="review_form" method="post" action="{$user_review.form_action}">
   <p class="review_message warning">{'Please do not use this form to request assistance or report a bug. Use the forums instead.'|@translate}</p>
   <p {if isset($user_review.is_logged)}style="display:none;"{/if}>
-    <label for="author">{'Name'|@translate}</label><br> 
+    <label for="author">{'Name'|@translate}</label><br>
     <input id="author" type="text" name="author" size="30" value="{$user_review.author}">
   </p>
   <p {if isset($user_review.is_logged)}style="display:none;"{/if}>
-    <label for="email">{'Email (not displayed)'|@translate}</label><br> 
+    <label for="email">{'Email (not displayed)'|@translate}</label><br>
     <input id="email" type="text" name="email" size="30" value="{$user_review.email}">
   </p>
+  <p style="display:none">
+      <label>{'Confirm email'}</label><br>
+      <input name="confirm_email" type="text" size="30" maxlength="255" value="" />
+  </p>
   <p>
-    <label for="title">{'Review summary'|@translate}</label><br> 
+    <label for="title">{'Review summary'|@translate}</label><br>
     <input id="title" type="text" name="title" style="width:99%;" value="{$user_review.title}">
   </p>
   <p>
-    <label for="content">{'Your review'|@translate}</label><br> 
+    <label for="content">{'Your review'|@translate}</label><br>
     <textarea id="content" name="content" style="width:99%;" rows="6">{$user_review.content}</textarea>
   </p>
   <p>
@@ -272,7 +276,7 @@ jQuery(function(){ldelim}
     {html_options name=score options=$scores}
   </p>
   <p>
-    <label>{'Language'|@translate}</label> 
+    <label>{'Language'|@translate}</label>
     <span class="language"><b>{$languages[$user_language].name}</b> <a href="#">This is not your language ?</a></span>
     <span class="language" style="display:none;">
       <select name="idx_language">
@@ -306,14 +310,14 @@ jQuery(function(){ldelim}
         {if isset($review.u_validate)}| <a href="{$review.u_validate}#reviews">{'Validate'|@translate}</a>{/if}
       </div>
       <div class="title">
-      {if $review.in_edit}
-        <input id="title" type="text" name="title" style="width:600px;" value="{$review.title}">
-      {else}
-        {$review.title}
-      {/if}
+	  {if $review.in_edit}
+              <input id="title" type="text" name="title" style="width:600px;" value="{$review.title}">
+	  {else}
+              {$review.title}
+	  {/if}
       </div>
     </div>
-  {if $review.in_edit}
+    {if $review.in_edit}
       <textarea id="content" name="content" style="width:600px;" rows="6">{$review.content}</textarea>
       <input type="hidden" name="id_review" value="{$review.id_review}">
       <br><input type="submit" value="{'Send'|@translate}">

@@ -39,7 +39,9 @@ if (isset($_GET['action']))
       break;
 
     case 'add_review':
-      if (empty($_POST)) break;
+      if (empty($_POST) || !empty($_POST['confirm_email'])) {
+          break;
+      }
 
       $user_review = array(
         'idx_extension' => $page['extension_id'],

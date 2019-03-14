@@ -1,3 +1,4 @@
 vendor
 include/config_local.inc.php
 _data
+upload
